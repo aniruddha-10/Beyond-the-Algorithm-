@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beyond the Algorithm</title>
+  <meta name="description" content="How personalized are the Instagram and YouTube ads we actually see? CPSC 482 Group 10.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">CPSC 482 · Group 10</p>
+      <h1>Beyond the Algorithm</h1>
+      <p class="lede">
+        Five of us logged every Instagram and YouTube ad we saw from October 10 to November 2, 2026:
+        what it was, how relevant it felt, what we did with it, and whether it felt too personal.
+      </p>
+    </div>
+    <button id="theme-toggle" class="btn" type="button" aria-label="Toggle dark mode">Dark mode</button>
+  </header>
+
+  <nav id="filters" class="filter-bar" aria-label="Dashboard filters"></nav>
+
+  <section id="cards" class="cards" aria-label="Summary"></section>
+
+  <main class="grid">
+    <section class="panel span-2" id="panel-treemap">
+      <header>
+        <p class="rq">RQ1 · Categories</p>
+        <h2>What kinds of ads do we actually see?</h2>
+      </header>
+      <div class="chart" id="chart-treemap"></div>
+    </section>
+
+    <section class="panel" id="panel-butterfly">
+      <header>
+        <p class="rq">RQ1 · Platforms</p>
+        <h2>Which platform targets us better?</h2>
+      </header>
+      <div class="chart" id="chart-butterfly"></div>
+    </section>
+
+    <section class="panel" id="panel-dumbbell">
+      <header>
+        <p class="rq">RQ4 · People</p>
+        <h2>Does Instagram beat YouTube for each of us?</h2>
+      </header>
+      <div class="chart" id="chart-dumbbell"></div>
+    </section>
+
+    <section class="panel" id="panel-likert">
+      <header>
+        <p class="rq">RQ2 · Interests</p>
+        <h2>Does matching our interests make an ad feel relevant?</h2>
+      </header>
+      <div class="chart" id="chart-likert"></div>
+    </section>
+
+    <section class="panel" id="panel-reason">
+      <header>
+        <p class="rq">RQ3 · Intrusiveness</p>
+        <h2>When does a relevant ad start to feel too personal?</h2>
+      </header>
+      <div class="chart" id="chart-reason"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      Self-reported observations from five participants (P1–P5); results describe this sample only and
+      make no claim about what data either platform used to target an ad.
+    </p>
+  </footer>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

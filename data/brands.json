@@ -1,0 +1,1478 @@
+[
+ {
+  "brand": "Remitly",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 9
+ },
+ {
+  "brand": "ATB Financial",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 6
+ },
+ {
+  "brand": "Meta",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 5
+ },
+ {
+  "brand": "Muse (Meta)",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 5
+ },
+ {
+  "brand": "Popeyes",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 5
+ },
+ {
+  "brand": "Rbc",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 5
+ },
+ {
+  "brand": "Bet365",
+  "category": "Gambling/Betting",
+  "platform": "YouTube",
+  "count": 4
+ },
+ {
+  "brand": "BetMGM",
+  "category": "Gambling/Betting",
+  "platform": "YouTube",
+  "count": 4
+ },
+ {
+  "brand": "Grok",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 4
+ },
+ {
+  "brand": "Sephora",
+  "category": "Beauty",
+  "platform": "Instagram",
+  "count": 4
+ },
+ {
+  "brand": "Snowflake",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 4
+ },
+ {
+  "brand": "Toyota",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 4
+ },
+ {
+  "brand": "Coursera",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Dkcasino",
+  "category": "Gambling/Betting",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "GoodLife Fitness",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Google AI Pro",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Grok",
+  "category": "Apps/Software",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Meta",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Moomoo",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Muse (Meta)",
+  "category": "Apps/Software",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Muse (Meta)",
+  "category": "Apps/Software",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Overleaf",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Planet Fitness",
+  "category": "Fitness/Health",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Questrade",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Scotiabank",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Temu",
+  "category": "Shopping/Retail",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Uber Eats",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 3
+ },
+ {
+  "brand": "Volkswagen",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 3
+ },
+ {
+  "brand": "Airbnb",
+  "category": "Travel",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Apple",
+  "category": "Apps/Software",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "BMO",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "BMO",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "BetMGM",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Bree",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Cadbury",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Calgary Co-op",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Call Of Duty",
+  "category": "Gaming",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Doordash",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "DraftKings",
+  "category": "Gambling/Betting",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Duolingo",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Felix Health",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Fragrance X",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Hinge",
+  "category": "Dating/Social",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Hollywood Casino",
+  "category": "Gambling/Betting",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Home Depot",
+  "category": "Home/Lifestyle",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Intake Breathing",
+  "category": "Fitness/Health",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Kingshot",
+  "category": "Gaming",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Momentum Calgary",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Muse (Meta)",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "Nespresso",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Overleaf",
+  "category": "Apps/Software",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Popeyes",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Poplin Laundry",
+  "category": "Business Services",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "SPC Card",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Sorensen Dental",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Sour Patch",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "TD",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "Wall Street Journal",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 2
+ },
+ {
+  "brand": "theScore Bet",
+  "category": "Gambling/Betting",
+  "platform": "YouTube",
+  "count": 2
+ },
+ {
+  "brand": "1800GoTJUNK",
+  "category": "Other",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "ATB Financial",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Adobe",
+  "category": "Apps/Software",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Apple",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Arcteryx",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Atco Energy",
+  "category": "Home/Lifestyle",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Atricent App",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Audi Canada",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "BMO",
+  "category": "Other",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "BTCC",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Bashafoods",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Bed Bath & Beyond Canada",
+  "category": "Shopping/Retail",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Bell",
+  "category": "Telecom/Internet",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Better Me",
+  "category": "Fitness/Health",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "BlockSite",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Bloomberg.com",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Blossomup",
+  "category": "Apps/Software",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Boss",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Brookfield Yyc",
+  "category": "Other",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Buick Canada",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "CFA Institute",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Candlelight concerts",
+  "category": "Music/Entertainment",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Canwarmuseum",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Casino Classic Online",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Casio G Shock",
+  "category": "Clothing/Fashion",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Catholicn cemteries",
+  "category": "Other",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Cedarbrae Family Dental",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "ChatGPT",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Cinnamon Yyc",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Ciradotsca",
+  "category": "Telecom/Internet",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "City Of Calgary",
+  "category": "Politics/Government",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Claudeai",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Clearscore",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Clif",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Clinique Canada",
+  "category": "Beauty",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Cloud Naan Yyc",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Coop Taxi Lloydminster",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Coursera",
+  "category": "Apps/Software",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Cozey",
+  "category": "Home/Lifestyle",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Crispers Canada",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Crumbl",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Databricks Inc",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Dawam.ca",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Delta casino",
+  "category": "Gambling/Betting",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Disney+",
+  "category": "Streaming/Movies/TV",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Doordash",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Downy",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "DraftKings",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Driven Motors",
+  "category": "Automotive",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Duppescents",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Eduhubspot",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "ElevenLabs",
+  "category": "Apps/Software",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "ElevenLabs",
+  "category": "Apps/Software",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "ElevenLabs",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Excel Homes",
+  "category": "Real Estate/Housing",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Executive diamonds",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "FanDuel",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "FanDuel",
+  "category": "Gambling/Betting",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "FanDuel",
+  "category": "Gaming",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "FiresideCochrane",
+  "category": "Real Estate/Housing",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Fitness Unhinged",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Fizz Mobile",
+  "category": "Telecom/Internet",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Flixbus",
+  "category": "Travel",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Fountain Tire",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Gillette",
+  "category": "Beauty",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Gillette",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Globe And Mail",
+  "category": "Other",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Glory land Daycare",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Golden Nugget Online Casino",
+  "category": "Gaming",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Google gemini",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Great clips",
+  "category": "Beauty",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Greystone Family Dental",
+  "category": "Healthcare/Medical",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Harris And Partners",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Harris And Peters",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Hello fresh",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Hitchkiofficial",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Hollywood Casino",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Home Depot",
+  "category": "Other",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Home Depot",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Housecall Pro",
+  "category": "Other",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Instacart",
+  "category": "Shopping/Retail",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Interac",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Interac",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Intuit Accountants",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Jerusalem Shawarma",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Kaplan Professional Education",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "LASIK Md",
+  "category": "Clothing/Fashion",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Laifen Us",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Laikastudios",
+  "category": "Art/Crafts/Hobbies",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Lifemark Vocational",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Lifta",
+  "category": "Fitness/Health",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Little Caeser",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Loop Earplug",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Loopha",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Lunar Graphics",
+  "category": "Books/Publishing",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "MIT",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Madegoodfoodscanada",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Marks Canada",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Marks Canada",
+  "category": "Clothing/Fashion",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Mnpllp",
+  "category": "Other",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Moneris",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Mooresclothing",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Mrs Meyers Clean Day Canada",
+  "category": "Home/Lifestyle",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Mycnf",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "National Bank Of Canada",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Nissan Canada",
+  "category": "Automotive",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Odd Bunch",
+  "category": "Other",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Oil Sand Alliance",
+  "category": "Other",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Oreo",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Outlierai",
+  "category": "Jobs/Careers",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "PMP Peoject management",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Peacetea_ca",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Planet Fitness",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Play Alberta CA",
+  "category": "Gambling/Betting",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Pmi_org",
+  "category": "Dating/Social",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Prairie Toyota Dealer",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Prep 101",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Prime Video",
+  "category": "Music/Entertainment",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Quickbooks",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Railway_avenue_dental",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Ralph Lauren",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Range Rover",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Rd Auto",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Regal auction",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Rexall",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Rexall",
+  "category": "Healthcare/Medical",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Ritz Canada",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Riverside dental YYC",
+  "category": "Healthcare/Medical",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Rm Tutoring",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Rockstar Energy Canada",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "SHEIN",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "SPC Card",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Safeway Canada",
+  "category": "Shopping/Retail",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Sagehill Senior Living",
+  "category": "Real Estate/Housing",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Samsara.iot",
+  "category": "Technology",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Samsung",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Saskatewan Polytechnic",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Saveonfoods",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Scholars Edge",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Servusalberta",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Shaan",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Shelbyscanada",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Shopify",
+  "category": "Business Services",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Shredzshop",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Simply Renewable",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Skip The Dishes",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Sobeys",
+  "category": "Shopping/Retail",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Specsaver",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Sundance College",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Supplementworldcanada",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Surge Consulting",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Sweetlink+",
+  "category": "Dating/Social",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Tamarind restaurant",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Tangerine",
+  "category": "Finance",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Tangerine",
+  "category": "Finance",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Temu",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Temu",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Temu",
+  "category": "Clothing/Fashion",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Temu",
+  "category": "Fitness/Health",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Temu",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Thecuestudio",
+  "category": "Music/Entertainment",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Thinkific",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Tidelaundry",
+  "category": "Home/Lifestyle",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Timhortons",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Too Good To Go",
+  "category": "Food/Drink",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Tostitos",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Toyogenics",
+  "category": "Automotive",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Trinity Western University",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "UAlberta",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "UBC Extended Learning",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "UNHCR Canada",
+  "category": "Nonprofit/Charity",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Ullu",
+  "category": "Clothing/Fashion",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Uniqlo",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "University Of Calgary",
+  "category": "Education",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "University Of Victoria",
+  "category": "Education",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Unknown",
+  "category": "Fitness/Health",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Unknown",
+  "category": "Jobs/Careers",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Vibn",
+  "category": "Clothing/Fashion",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Visions electronic",
+  "category": "Shopping/Retail",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "Vitaplus",
+  "category": "Fitness/Health",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Wave cast Studios",
+  "category": "Music/Entertainment",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Wd 40",
+  "category": "Automotive",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "What Not",
+  "category": "Shopping/Retail",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Wingstop",
+  "category": "Food/Drink",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "Xero",
+  "category": "Business Services",
+  "platform": "Instagram",
+  "count": 1
+ },
+ {
+  "brand": "YouTube",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ },
+ {
+  "brand": "YouTube Premium",
+  "category": "Technology",
+  "platform": "YouTube",
+  "count": 1
+ }
+]

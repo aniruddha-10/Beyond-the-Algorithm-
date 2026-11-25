@@ -1,0 +1,15 @@
+# Raw spreadsheet stays local: it has brand names next to participants,
+# network/place and session details that the public site must not publish.
+data/raw/
+
+# Python
+.venv/
+__pycache__/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local editor/agent config
+.claude/
