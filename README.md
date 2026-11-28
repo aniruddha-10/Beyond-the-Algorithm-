@@ -3,7 +3,7 @@
 CPSC 482 Group 10 final dashboard: how personalized are the Instagram and YouTube ads we actually see?
 356 ads logged by five participants (P1–P5), October 10 – November 2, 2026.
 
-**Live site:** _add the GitHub Pages link here once deployed_
+**Live site:** <https://aniruddha-10.github.io/Beyond-the-Algorithm-/>
 **Due:** December 1, noon (live link + PDF report)
 
 ## Run it locally
@@ -47,7 +47,7 @@ js/charts/*.js          one file per chart, one owner per file
 | Matrix: reason × relevance × intrusive | `js/charts/reasonMatrix.js` | RQ3 | TBD |
 | Shell: filters, cards, state, styling | `js/*.js`, `css/` | n/a | TBD |
 
-Each chart file starts with a to-do list from the proposal, and the placeholder in the browser shows the same list.
+The treemap, butterfly and dumbbell charts are built. The two unbuilt chart files start with a to-do list from the proposal, and the placeholder in the browser shows the same list.
 
 ## The chart contract
 
@@ -111,7 +111,7 @@ Each record in `ads.json`:
 
 ## Deploy (GitHub Pages)
 
-Repo → Settings → Pages → Source: *Deploy from a branch* → `main` / `/ (root)`. The site updates a minute after each merge to `main`. `.nojekyll` is already in the repo.
+Already enabled: Pages serves `main` / `/ (root)`. The site updates a minute or two after each merge to `main`.
 
 ## Schedule
 
@@ -126,4 +126,4 @@ Repo → Settings → Pages → Source: *Deploy from a branch* → `main` / `/ (
 
 ## GenAI note for the report
 
-The repo scaffold (data-prep script, filter bar, summary cards, shared state/metrics/theme modules, chart placeholders and this README) was generated with Claude Code. Each chart is built by its owner. List any other GenAI use in the Contributions section.
+The repo scaffold (data-prep script, filter bar, summary cards, shared state/metrics/theme modules, chart placeholders and this README) was generated with Claude Code. The treemap, butterfly and dumbbell charts were also generated with Claude Code. The remaining charts are built by their owners. List any other GenAI use in the Contributions section.
