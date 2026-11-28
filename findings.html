@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/site.css">
 </head>
-<body class="page-findings">
+<body class="page-story page-findings">
   <nav class="site-nav" aria-label="Site">
     <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">Beyond the Algorithm</span></a>
     <div class="nav-links">
@@ -22,64 +22,82 @@
     <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"></button>
   </nav>
 
-  <main class="verdict">
+  <!-- Numbers below come from data/ads.json (356 ads). "Each person equally" figures average P1–P5. -->
+  <main class="story story-findings">
     <div class="glow" aria-hidden="true"><span></span><span></span></div>
 
-    <header class="verdict-head">
+    <header class="story-head">
       <p class="eyebrow reveal">Findings · the answer to our proposal's question</p>
-      <h1 class="verdict-question reveal" style="--delay: 60ms">How personalized are the ads we actually see?</h1>
-      <p class="verdict-answer reveal" style="--delay: 140ms">
-        <em class="gradient-text">Not very.</em> Nearly half missed us entirely, only 1 in 6 felt useful,
-        and who was scrolling mattered more than which app.
+      <h1 class="story-question reveal" style="--delay: 60ms">How personalized are the ads we actually see?</h1>
+      <p class="story-answer reveal" style="--delay: 140ms">
+        <em class="gradient-text">Not very.</em> Most ads felt generic, Instagram felt more personal than YouTube
+        without targeting us any better, and who was scrolling mattered more than which app.
       </p>
     </header>
 
-    <section class="verdict-card spectrum-card reveal" style="--delay: 200ms" aria-labelledby="spectrum-title">
-      <div class="verdict-card-head">
-        <div>
-          <p class="kicker">Every ad, sorted by how personal it felt</p>
-          <h2 id="spectrum-title">The personalization spectrum</h2>
-        </div>
-        <div class="mode-switch mode-switch-sm" id="weighting" role="group" aria-label="Count">
-          <button type="button" data-weighting="pooled" aria-pressed="true" title="Pool all ads together">Every ad once</button>
-          <button type="button" data-weighting="balanced" aria-pressed="false" title="Average each person's result, so P1's 115 ads don't outweigh P4's 52">Each person equally</button>
-        </div>
+    <article class="story-card t1 reveal" style="--delay: 200ms">
+      <div class="card-top">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M19 5l-5.5 5.5"/></svg></span>
+        <span class="kicker">Takeaway 1</span>
       </div>
-      <div class="spectrum-legend" id="spectrum-legend"></div>
-      <div class="verdict-plot" id="spectrum"></div>
-    </section>
+      <h2>7 in 10 ads didn't feel personal at all.</h2>
+      <ul class="figures">
+        <li><b>46%</b><span>missed us completely <small>rated 1–2</small></span></li>
+        <li><b>26%</b><span>were of general interest <small>rated 3</small></span></li>
+        <li><b>17%</b><span>felt genuinely useful <small>rated 4–5</small></span></li>
+        <li><b>11%</b><span>felt too personal <small>felt intrusive</small></span></li>
+      </ul>
+      <p class="note">Every ad counted once. Counting each person equally: 49% · 24% · 16% · 11%.</p>
+    </article>
 
-    <section class="verdict-card dims-card reveal" style="--delay: 280ms" aria-labelledby="dims-title">
-      <p class="kicker">Our proposal's four dimensions of personalization</p>
-      <h2 id="dims-title">Instagram vs YouTube</h2>
-      <p class="dims-summary" id="dims-summary"></p>
-      <div class="verdict-plot" id="dimensions"></div>
-    </section>
+    <article class="story-card t2 reveal" style="--delay: 260ms">
+      <div class="card-top">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="7" height="16" rx="2"/><rect x="13.5" y="4" width="7" height="16" rx="2"/><path d="M6.5 17h1M16.5 17h1"/></svg></span>
+        <span class="kicker">Takeaway 2 · our four dimensions</span>
+      </div>
+      <h2>Instagram felt more personal, without targeting us better.</h2>
+      <ul class="versus">
+        <li><span class="dim">Targeting</span><span class="who">Even</span><small>matched our interests · IG 53.4% · YT 53.4%</small></li>
+        <li><span class="dim">Relevance</span><span class="who">Instagram</span><small>average rating · IG 2.64 · YT 2.37</small></li>
+        <li><span class="dim">Engagement</span><span class="who">Instagram, 3×</span><small>clicked · IG 11.1% · YT 3.4%</small></li>
+        <li><span class="dim">Privacy</span><span class="who">Instagram</span><small>felt too personal · IG 13.5% · YT 8.1%</small></li>
+      </ul>
+      <p class="note">Counting each person equally gives the same verdicts.</p>
+    </article>
 
-    <section class="verdict-facts" aria-label="Supporting findings">
-      <article class="verdict-fact reveal" style="--delay: 360ms">
+    <article class="story-card t3 reveal" style="--delay: 320ms">
+      <div class="card-top">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/><circle cx="17" cy="9.5" r="2.5"/><path d="M16 14.4c2.4-.2 4.1 1.3 4.6 3.9"/></svg></span>
+        <span class="kicker">Takeaway 3</span>
+      </div>
+      <h2>Who was scrolling mattered more than which app.</h2>
+      <p class="big-quote">26% <span>to</span> 69%</p>
+      <p>How often an ad <strong>missed</strong> ranged from 26% for P1 to 69% for P5. Between the two apps it differed by just <strong>8 points</strong> (42% Instagram, 50% YouTube).</p>
+      <p>One person's YouTube felt useful <strong>57%</strong> of the time (P2); another's, <strong>never</strong> (P4).</p>
+    </article>
+
+    <section class="story-facts" aria-label="Behind the answer">
+      <p class="kicker facts-label reveal" style="--delay: 360ms">Behind the answer</p>
+      <article class="story-fact reveal" style="--delay: 380ms">
         <p class="fact-figure">0% <span aria-hidden="true">→</span> 67%</p>
         <p>of ads felt too personal, going from ads we rated 1 to ads we rated 5. The best fits were the ones that crossed the line.</p>
       </article>
-      <article class="verdict-fact reveal" style="--delay: 420ms">
+      <article class="story-fact reveal" style="--delay: 430ms">
         <p class="fact-figure">6 of 7 <span class="fact-vs">vs</span> 1 of 38</p>
         <p>felt too personal when an ad followed a conversation, compared with ads for products we already use. Small group: a hint, not proof.</p>
       </article>
-      <article class="verdict-fact reveal" style="--delay: 480ms">
+      <article class="story-fact reveal" style="--delay: 480ms">
         <p class="fact-figure">173 of 356</p>
         <p>ads had no connection we could name at all. They averaged 1.5 out of 5 for relevance.</p>
       </article>
     </section>
 
-    <footer class="verdict-foot">
+    <footer class="story-foot">
       <p>356 ads · 119 sessions · five people (P1–P5) · Oct 10 – Nov 2, 2026. Self-reported: this describes how targeting felt to us, not what data either platform used.</p>
-      <a class="btn btn-lg btn-primary" href="dashboard.html">Explore it yourself <span class="arrow" aria-hidden="true">→</span></a>
+      <a class="btn btn-lg btn-primary" href="dashboard.html">See the evidence in the dashboard <span class="arrow" aria-hidden="true">→</span></a>
     </footer>
   </main>
 
-  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
-
   <script type="module" src="js/site.js"></script>
-  <script type="module" src="js/findings.js"></script>
 </body>
 </html>
