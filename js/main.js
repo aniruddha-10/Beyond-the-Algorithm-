@@ -4,6 +4,7 @@ import * as d3 from "./d3.js";
 import { getState, onChange, filterAds } from "./state.js";
 import { createFilters } from "./filters.js";
 import { createCards } from "./cards.js";
+import { setupPanels } from "./panels.js";
 import { createTreemap } from "./charts/treemap.js";
 import { createButterfly } from "./charts/butterfly.js";
 import { createDumbbell } from "./charts/dumbbell.js";
@@ -24,16 +25,21 @@ const views = [
   createReasonMatrix(document.getElementById("chart-reason")),
 ];
 
-function render() {
+// animate = true only when the data changed (a filter), so charts glide to their
+// new values. Resizes, theme changes and the first draw are instant.
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function render(animate = false) {
   const state = getState();
   const rows = filterAds(ads, state);
-  for (const view of views) view.update({ rows, ads, state });
+  for (const view of views) view.update({ rows, ads, state, animate: animate && !reduceMotion });
 }
 
-onChange(render);
-window.addEventListener("resize", debounce(render, 150));
-window.addEventListener("themechange", render); // fired by site.js (toggle or OS change)
-render();
+setupPanels(() => render(false));
+onChange(() => render(true));
+window.addEventListener("resize", debounce(() => render(false), 150));
+window.addEventListener("themechange", () => render(false)); // fired by site.js (toggle or OS change)
+render(false);
 
 function debounce(fn, ms) {
   let t;

@@ -62,16 +62,18 @@ Every chart exports one function that `main.js` calls once:
 ```js
 export function createMyChart(container) {
   const root = d3.select(container);
-  // one-time setup, top to bottom: optional controls, the plot, optional note
+  // one-time setup, top to bottom: optional controls (+ legend), then the plot
   const controls = root.append("div").attr("class", "chart-controls");
   const plot = root.append("div").attr("class", "chart-plot");
   const svg = plot.append("svg");
   return {
-    update({ rows, ads, state }) {
-      // runs on every filter change, theme toggle and window resize
-      // rows  = ads after all filters
-      // ads   = all 356 ads (use filterAds(ads, state, { ignore: [...] }) for a different view)
-      // state = { participants, platforms, category, dateFrom, dateTo, weighting }
+    update({ rows, ads, state, animate }) {
+      // runs on every filter change, theme toggle, window resize and Explore open/close
+      // rows    = ads after all filters
+      // ads     = all 356 ads (use filterAds(ads, state, { ignore: [...] }) for a different view)
+      // state   = { participants, platforms, category, dateFrom, dateTo, weighting }
+      // animate = true only for filter changes: glide marks to their new values (~650 ms).
+      //           false for resize/theme/first draw: draw instantly.
     },
   };
 }
@@ -79,7 +81,9 @@ export function createMyChart(container) {
 
 - **Import D3 from `../d3.js`**, not from the CDN, so the version stays pinned in one place.
 - **Size:** inside `update`, size the svg from `plot.node().clientWidth` and `plot.node().clientHeight`, not once in setup. On a laptop or desktop the whole dashboard fits one screen with no scrolling, so the plot gets whatever height is left in its panel after the controls and note. That can be as little as ~130px on a 1280×720 window, so let rows and bars shrink. On phones and short windows the page scrolls and the plot is a fixed 280px tall.
-- **Keep the extras short:** put legends in the `.chart-controls` row and keep notes to one line (`.chart-note` cuts off overflow). Every extra line takes height from your plot. Update controls, legend and note text *before* measuring the plot.
+- **Keep it calm:** put the legend in the `.chart-controls` row and don't add notes under the chart. "How to read this" text goes in your panel's `data-info` attribute in `dashboard.html`; it shows in the ⓘ button. Default to few numbers on the chart and put the detail in tooltips. Update controls and legend *before* measuring the plot.
+- **Animation:** when `animate` is true, transition from the previous values to the new ones (see `butterfly.js`: it keeps a `previous` map and starts each bar from its old width). Nothing should move on its own, and `main.js` already turns `animate` off for visitors with reduced motion.
+- **Explore:** every built panel gets an "Explore this chart" pill on hover that opens it large; `update` is called again at the new size, so nothing to do as long as you size from `.chart-plot`. Your panel shows a quiet "Coming soon" tile until you remove the placeholder import.
 - **Fonts:** body text is Inter, headings Instrument Serif, small labels JetBrains Mono (`var(--font-sans)`, `--font-serif`, `--font-mono` in `site.css`). SVG text inherits Inter from `.chart text`.
 - **Colours:** `platformColor(p)` and `relevanceColor(v)` from `theme.js`. Set them with `.style("fill", ...)`, not `.attr`, so the CSS variables (and dark mode) work. Don't introduce new colours without checking with the team.
 - **Metrics:** use `computeMetric(key, rows, state.weighting)` from `metrics.js` so "click rate" means the same thing everywhere and the "Each person equally" toggle works.

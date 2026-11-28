@@ -20,6 +20,7 @@ import { showTooltip, hideTooltip } from "../tooltip.js";
 const DEFAULT_TOP_N = 10;
 const MIN_TOP_N = 3;
 const OTHER = "__other__";
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function createTreemap(container, { brands }) {
   const root = d3.select(container);
@@ -38,15 +39,15 @@ export function createTreemap(container, { brands }) {
   const sliderValue = sliderLabel.append("output").attr("class", "treemap-n");
   slider.on("input", function () {
     topN = +this.value;
-    if (last) draw(last);
+    if (last) draw(last, !reduceMotion);
   });
 
   const legend = controls.append("div").attr("class", "legend");
   const plot = root.append("div").attr("class", "chart-plot");
   const svg = plot.append("svg").attr("role", "group").attr("aria-label", "Treemap of ad categories");
-  const note = root.append("p").attr("class", "chart-note");
 
-  function draw({ ads, state }) {
+  // animate: tiles glide to their new size and position (filter changes, slider).
+  function draw({ ads, state }, animate = false) {
     // Keep every category visible while one is selected.
     const base = filterAds(ads, state, { ignore: ["category"] });
     const groups = d3.rollups(base, (v) => v, (d) => d.category)
@@ -72,22 +73,15 @@ export function createTreemap(container, { brands }) {
       items.push({ category: OTHER, rows, n: rows.length, folded, relevance: NaN });
     }
 
-    // Legend and note first: they share the panel with the plot, so measure the plot after.
+    // Legend first: it shares the panel with the plot, so measure the plot after.
+    // (How-to-read text lives in the panel's ⓘ, from data-info in dashboard.html.)
     const stops = d3.range(1, 5.01, 0.5).map((v, i, a) => `${relevanceColor(v)} ${(i / (a.length - 1)) * 100}%`);
     legend.html(`
-      <span>Area = number of ads</span>
       <span class="legend-item">Average relevance
         <span class="legend-ramp-wrap"><span class="legend-ramp" style="background: linear-gradient(to right, ${stops.join(", ")})"></span>
         <span class="legend-ramp-labels"><span>1 · not relevant</span><span>5 · specific need</span></span></span>
       </span>
     `);
-
-    const shownAds = d3.sum(shown, (g) => g.n);
-    note.text(
-      state.category
-        ? `Filtered to ${state.category}. Click it again (or Reset) to show all categories.`
-        : `Click a category to filter the whole dashboard. ${folded.length ? `The ${shown.length} largest categories hold ${shownAds} of ${base.length} ads.` : ""}`
-    );
 
     const width = plot.node().clientWidth;
     const height = Math.max(120, plot.node().clientHeight);
@@ -99,7 +93,6 @@ export function createTreemap(container, { brands }) {
       svg.append("text").attr("x", width / 2).attr("y", height / 2).attr("text-anchor", "middle")
         .text("No ads match the current filters.");
       legend.html("");
-      note.text("");
       return;
     }
     svg.selectAll(":scope > text").remove();
@@ -114,26 +107,39 @@ export function createTreemap(container, { brands }) {
     const fillOf = (d) => (d.category === OTHER ? "var(--neutral)" : relevanceColor(d.relevance));
     const inkOf = (d) => (d.category === OTHER ? "var(--text-primary)" : d3.lab(fillOf(d)).l > 62 ? "#0b0b0b" : "#ffffff");
 
+    const t = svg.transition().duration(animate ? 650 : 0).ease(d3.easeCubicInOut);
+    const move = (sel) => (animate ? sel.transition(t) : sel.interrupt());
+    const placeAt = (d) => `translate(${d.x0},${d.y0})`;
+
     const tile = svg.selectAll("g.treemap-tile")
       .data(hierarchy.leaves(), (d) => d.data.category)
-      .join((enter) => {
-        const g = enter.append("g").attr("class", "treemap-tile").attr("tabindex", 0);
-        g.append("rect").attr("rx", 4);
-        g.append("text").attr("class", "treemap-name").attr("x", 8).attr("y", 18);
-        g.append("text").attr("class", "treemap-count").attr("x", 8).attr("y", 34);
-        return g;
-      })
-      .attr("transform", (d) => `translate(${d.x0},${d.y0})`)
+      .join(
+        (enter) => {
+          const g = enter.append("g").attr("class", "treemap-tile").attr("tabindex", 0)
+            .attr("transform", placeAt).style("opacity", 0);
+          g.append("rect").attr("rx", 4)
+            .attr("width", (d) => Math.max(0, d.x1 - d.x0)).attr("height", (d) => Math.max(0, d.y1 - d.y0));
+          g.append("text").attr("class", "treemap-name").attr("x", 8).attr("y", 18);
+          g.append("text").attr("class", "treemap-count").attr("x", 8).attr("y", 34);
+          return g;
+        },
+        (update) => update,
+        (exit) => (animate ? exit.transition(t).style("opacity", 0).remove() : exit.remove())
+      )
       .attr("role", "button")
       .attr("aria-pressed", (d) => String(d.data.category === state.category))
       .attr("aria-label", (d) => labelFor(d.data, total))
-      .classed("is-other", (d) => d.data.category === OTHER)
+      .classed("is-other", (d) => d.data.category === OTHER);
+
+    move(tile)
+      .attr("transform", placeAt)
       .style("opacity", (d) => (state.category && d.data.category !== state.category ? 0.35 : 1));
 
-    tile.select("rect")
+    move(tile.select("rect"))
       .attr("width", (d) => Math.max(0, d.x1 - d.x0))
       .attr("height", (d) => Math.max(0, d.y1 - d.y0))
-      .style("fill", (d) => fillOf(d.data))
+      .style("fill", (d) => fillOf(d.data));
+    tile.select("rect")
       .style("stroke", (d) => (d.data.category === state.category ? "var(--text-primary)" : "none"))
       .style("stroke-width", 2);
 
@@ -148,13 +154,11 @@ export function createTreemap(container, { brands }) {
 
     tile.select(".treemap-count")
       .style("fill", (d) => inkOf(d.data))
+      // Counts only on roomy tiles; relevance and brands are in the tooltip.
       .text((d) => {
         const w = d.x1 - d.x0, h = d.y1 - d.y0;
-        if (w < 44 || h < 42) return "";
-        const count = `${d.data.n} ads`;
-        const full = d.data.category === OTHER ? count : `${count} · ${METRICS.avgRelevance.format(d.data.relevance)}`;
-        // Drop the relevance before truncating the count.
-        return fit(full.length * 6.6 <= w - 14 ? full : count, w - 14, 6.6);
+        if (w < 80 || h < 48) return "";
+        return fit(`${d.data.n} ads`, w - 14, 6.6);
       });
 
     tile
@@ -174,7 +178,7 @@ export function createTreemap(container, { brands }) {
     hideTooltip();
     if (d.category === OTHER) {
       topN = categoryCount; // expand instead of filtering to a mixed group
-      if (last) draw(last);
+      if (last) draw(last, !reduceMotion);
       return;
     }
     setState({ category: state.category === d.category ? null : d.category });
@@ -211,7 +215,7 @@ export function createTreemap(container, { brands }) {
   return {
     update(args) {
       last = args;
-      draw(args);
+      draw(args, args.animate);
     },
   };
 }

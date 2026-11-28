@@ -1,5 +1,6 @@
-// Temporary stand-in each chart uses until its owner builds it. It shows the
-// spec from the proposal and a live row count, proving the filters reach it.
+// Temporary stand-in each chart uses until its owner builds it: one quiet
+// "coming soon" line, so unbuilt panels don't crowd the dashboard.
+// The full to-do list stays in the SPEC at the top of each chart file.
 // Delete the import from your chart file once you start drawing.
 import * as d3 from "../d3.js";
 
@@ -8,9 +9,9 @@ export function renderPlaceholder(container, spec, { rows }) {
   let box = root.select(".placeholder");
   if (box.empty()) {
     box = root.append("div").attr("class", "placeholder");
-    box.append("p").html(`<strong>${spec.title}</strong> · owner: ${spec.owner} · <code>${spec.file}</code>`);
-    box.append("ul").selectAll("li").data(spec.todo).join("li").text((d) => d);
-    box.append("p").attr("class", "live");
+    box.append("p").attr("class", "placeholder-kicker").text("Coming soon");
+    box.append("p").attr("class", "placeholder-title").text(spec.title);
   }
-  box.select(".live").text(`Filters connected: receiving ${rows.length} ads.`);
+  // Developers: the live count proves the filters reach this chart.
+  box.attr("title", `${spec.file} · receiving ${rows.length} ads`);
 }

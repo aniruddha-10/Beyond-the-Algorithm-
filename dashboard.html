@@ -28,7 +28,7 @@
     <div class="site-title">
       <p class="eyebrow">Interactive dashboard · 356 ads · Oct 10 – Nov 2, 2026</p>
       <h1>How personal are <em>our</em> ads?</h1>
-      <p class="lede">Every chart is linked: filter by person, platform, category or date, or click a category tile.</p>
+      <p class="lede">Every chart is linked. Filter above, hover for details, or open any chart with Explore.</p>
     </div>
     <section id="cards" class="cards" aria-label="Summary"></section>
   </header>
@@ -36,42 +36,52 @@
   <nav id="filters" class="filter-bar" aria-label="Dashboard filters"></nav>
 
   <main class="grid">
-    <section class="panel span-2" id="panel-treemap">
-      <header>
+    <section class="panel span-2" id="panel-treemap" data-info="Tile size is the number of ads; colour is average relevance (darker = more relevant). Click a tile to filter the whole dashboard to that category, and click it again to clear. The slider shows more categories; the grey tile combines the rest.">
+      <header class="panel-head">
+        <div>
         <p class="rq">RQ1 · Categories</p>
         <h2>What kinds of ads do we actually see?</h2>
+        </div>
       </header>
       <div class="chart" id="chart-treemap"></div>
     </section>
 
-    <section class="panel" id="panel-butterfly">
-      <header>
+    <section class="panel" id="panel-butterfly" data-info="Instagram grows left and YouTube right, on the same 0–100% scale. ↑ means higher is better, ↓ lower is better. If a platform is filtered out above, it is faded here so you can still compare.">
+      <header class="panel-head">
+        <div>
         <p class="rq">RQ1 · Platforms</p>
         <h2>Which platform targets us better?</h2>
+        </div>
       </header>
       <div class="chart" id="chart-butterfly"></div>
     </section>
 
-    <section class="panel" id="panel-dumbbell">
-      <header>
+    <section class="panel" id="panel-dumbbell" data-info="One row per person: circle = Instagram, square = YouTube. The right column shows which platform is ahead and by how much. Hollow markers mean fewer than 5 ads, so read them with care. The All row follows the Count switch.">
+      <header class="panel-head">
+        <div>
         <p class="rq">RQ4 · People</p>
         <h2>Does Instagram beat YouTube for each of us?</h2>
+        </div>
       </header>
       <div class="chart" id="chart-dumbbell"></div>
     </section>
 
-    <section class="panel" id="panel-likert">
-      <header>
+    <section class="panel" id="panel-likert" data-info="Compares ads that matched one of our listed interests with ads that didn't, split by relevance rating.">
+      <header class="panel-head">
+        <div>
         <p class="rq">RQ2 · Interests</p>
         <h2>Does matching our interests make an ad feel relevant?</h2>
+        </div>
       </header>
       <div class="chart" id="chart-likert"></div>
     </section>
 
-    <section class="panel" id="panel-reason">
-      <header>
+    <section class="panel" id="panel-reason" data-info="Rows are the reasons we gave for seeing an ad, columns are relevance ratings; circle size is the number of ads and colour how often they felt too personal.">
+      <header class="panel-head">
+        <div>
         <p class="rq">RQ3 · Intrusiveness</p>
         <h2>When does a relevant ad start to feel too personal?</h2>
+        </div>
       </header>
       <div class="chart" id="chart-reason"></div>
     </section>

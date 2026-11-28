@@ -17,6 +17,7 @@ const FEW_ADS = 5;  // fewer ads than this → hollow marker
 const TOP = 18;     // room for the "Gap" column header
 const BOTTOM = 22;
 const FADED = 0.3;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function createDumbbell(container) {
   const root = d3.select(container);
@@ -26,19 +27,21 @@ export function createDumbbell(container) {
 
   const controls = root.append("div").attr("class", "chart-controls");
   controls.append("select").attr("aria-label", "Measure")
-    .on("change", function () { metricKey = this.value; if (last) draw(last); })
+    .on("change", function () { metricKey = this.value; if (last) draw(last, !reduceMotion); })
     .selectAll("option").data(METRIC_KEYS).join("option")
     .attr("value", (d) => d).text((d) => METRICS[d].label);
   controls.append("select").attr("aria-label", "Row order")
-    .on("change", function () { order = this.value; if (last) draw(last); })
+    .on("change", function () { order = this.value; if (last) draw(last, !reduceMotion); })
     .selectAll("option").data([["participant", "P1 to P5"], ["gap", "Biggest gap first"]]).join("option")
     .attr("value", (d) => d[0]).text((d) => d[1]);
 
   const legend = controls.append("div").attr("class", "legend");
   const plot = root.append("div").attr("class", "chart-plot");
   const svg = plot.append("svg").attr("role", "group");
+  let previous = new Map(); // row id → { y, Instagram, YouTube } pixel positions, so markers glide
 
-  function draw({ ads, state }) {
+  // animate: markers slide to their new values and rows to their new order.
+  function draw({ ads, state }, animate = false) {
     const metric = METRICS[metricKey];
     const base = filterAds(ads, state, { ignore: ["platforms"] });
     const faded = (p) => !state.platforms.includes(p);
@@ -48,10 +51,9 @@ export function createDumbbell(container) {
     legend.html(`
       <span class="legend-item${faded("Instagram") ? " is-faded" : ""}"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" style="fill: var(--instagram)"/></svg>Instagram${fadedNote("Instagram")}</span>
       <span class="legend-item${faded("YouTube") ? " is-faded" : ""}"><svg width="12" height="12" aria-hidden="true"><rect x="1" y="1" width="10" height="10" rx="1.5" style="fill: var(--youtube)"/></svg>YouTube${fadedNote("YouTube")}</span>
-      <span class="legend-item"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill: none; stroke: var(--text-muted); stroke-width: 1.5"/></svg>Hollow: under ${FEW_ADS} ads</span>
     `);
     const width = plot.node().clientWidth;
-    const left = 104;
+    const left = 52;
     const right = Math.min(120, Math.max(84, width * 0.2));
 
     // Per person: metric for each platform. Plus one "All" row.
@@ -74,9 +76,8 @@ export function createDumbbell(container) {
     }
 
     // Rows share whatever height the panel gives the plot.
-    const ROW_H = Math.max(14, Math.min(48, (plot.node().clientHeight - TOP - BOTTOM) / Math.max(1, data.length)));
-    const roomy = ROW_H >= 32; // room for the "70 IG · 45 YT" line under each name
-    const r = ROW_H < 20 ? 4.5 : ROW_H < 26 ? 5.5 : 7;
+    const ROW_H = Math.max(12, Math.min(80, (plot.node().clientHeight - TOP - BOTTOM) / Math.max(1, data.length)));
+    const r = ROW_H < 16 ? 4 : ROW_H < 20 ? 4.5 : ROW_H < 26 ? 5.5 : ROW_H < 44 ? 7 : 9;
     const height = TOP + Math.max(1, data.length) * ROW_H + BOTTOM;
     svg.attr("width", width).attr("height", height).attr("viewBox", [0, 0, width, height])
       .attr("aria-label", `${metric.label} on Instagram and YouTube for each participant`);
@@ -92,7 +93,7 @@ export function createDumbbell(container) {
     const isRate = metric.domain[1] === 1;
     const maxValue = d3.max(data, (d) => Math.max(d.Instagram.value || 0, d.YouTube.value || 0));
     const domain = isRate ? [0, Math.min(1, Math.max(0.1, Math.ceil(maxValue * 10) / 10))] : metric.domain;
-    const x = d3.scaleLinear().domain(domain).range([roomy ? left : 52, width - right]);
+    const x = d3.scaleLinear().domain(domain).range([left, width - right]);
     const y = (i) => TOP + i * ROW_H + ROW_H / 2;
 
     // Grid + axis labels.
@@ -111,8 +112,17 @@ export function createDumbbell(container) {
       .style("font-size", "11px").style("fill", "var(--text-muted)")
       .text(isRate ? "Gap (pts)" : "Gap");
 
+    // Start each row where it was last time (position and marker x), then glide.
+    const t = svg.transition().duration(animate ? 650 : 0).ease(d3.easeCubicInOut);
+    const was = (d) => (animate ? previous.get(d.id) : null);
+    const pos = (d, p) => (Number.isFinite(d[p].value) ? x(d[p].value) : null);
+    const startX = (d, p) => was(d)?.[p] ?? pos(d, p);
+    const glide = (sel) => (animate ? sel.transition(t) : sel);
+
     const row = svg.append("g").selectAll("g").data(data).join("g")
-      .attr("transform", (d, i) => `translate(0,${y(i)})`);
+      .attr("transform", (d, i) => `translate(0,${was(d)?.y ?? y(i)})`)
+      .style("opacity", (d) => (animate && !was(d) ? 0 : 1));
+    glide(row).attr("transform", (d, i) => `translate(0,${y(i)})`).style("opacity", 1);
 
     // Divider above "All".
     row.filter((d) => d.isAll).append("line")
@@ -120,19 +130,16 @@ export function createDumbbell(container) {
       .style("stroke", "var(--border)");
 
     // Row labels.
-    row.append("text").attr("y", roomy ? -2 : 4)
+    // Row labels (ad counts and the All row's weighting are in the tooltip).
+    row.append("text").attr("y", 4)
       .style("fill", "var(--text-primary)").style("font-weight", 600).style("font-size", "13px")
       .text((d) => d.label);
-    row.append("text").attr("y", 13)
-      .style("fill", "var(--text-muted)").style("font-size", "11px")
-      .text((d) => (!roomy ? "" : d.isAll
-        ? (state.weighting === "balanced" ? "each person equally" : "every ad once")
-        : `${d.Instagram.n} IG · ${d.YouTube.n} YT`));
 
     // Connector.
-    row.filter((d) => Number.isFinite(d.gap)).append("line")
-      .attr("x1", (d) => x(d.Instagram.value)).attr("x2", (d) => x(d.YouTube.value))
+    const connector = row.filter((d) => Number.isFinite(d.gap)).append("line")
+      .attr("x1", (d) => startX(d, "Instagram")).attr("x2", (d) => startX(d, "YouTube"))
       .style("stroke", "var(--neutral)").style("stroke-width", 2);
+    glide(connector).attr("x1", (d) => pos(d, "Instagram")).attr("x2", (d) => pos(d, "YouTube"));
 
     // Markers: YouTube square first so the Instagram circle sits on top when they overlap.
     const marker = (sel, platform, draw) => sel
@@ -143,10 +150,12 @@ export function createDumbbell(container) {
       .style("stroke", (d) => (isFew(d, platform) ? platformColor(platform) : "var(--surface-1)"))
       .style("stroke-width", 2);
     const isFew = (d, p) => !d.isAll && d[p].n < FEW_ADS;
-    marker(row, "YouTube", "rect")
-      .attr("x", (d) => x(d.YouTube.value) - (r - 1)).attr("y", -(r - 1)).attr("width", 2 * (r - 1)).attr("height", 2 * (r - 1)).attr("rx", 2);
-    marker(row, "Instagram", "circle")
-      .attr("cx", (d) => x(d.Instagram.value)).attr("r", r);
+    const square = marker(row, "YouTube", "rect")
+      .attr("x", (d) => startX(d, "YouTube") - (r - 1)).attr("y", -(r - 1)).attr("width", 2 * (r - 1)).attr("height", 2 * (r - 1)).attr("rx", 2);
+    glide(square).attr("x", (d) => pos(d, "YouTube") - (r - 1));
+    const circle = marker(row, "Instagram", "circle")
+      .attr("cx", (d) => startX(d, "Instagram")).attr("r", r);
+    glide(circle).attr("cx", (d) => pos(d, "Instagram"));
 
     // Gap label on the right, in text colour (the marker beside it carries identity).
     row.append("text")
@@ -161,12 +170,14 @@ export function createDumbbell(container) {
       .style("fill", "transparent")
       .on("mousemove", (event, d) => showTooltip(event, tooltipFor(d, metric, state)))
       .on("mouseleave", hideTooltip);
+
+    previous = new Map(data.map((d, i) => [d.id, { y: y(i), Instagram: pos(d, "Instagram"), YouTube: pos(d, "YouTube") }]));
   }
 
   return {
     update(args) {
       last = args;
-      draw(args);
+      draw(args, args.animate);
     },
   };
 }

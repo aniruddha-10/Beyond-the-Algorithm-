@@ -12,11 +12,11 @@ import { platformColor } from "../theme.js";
 import { showTooltip, hideTooltip } from "../tooltip.js";
 
 const ROWS = [
-  { key: "highRelevanceShare", hint: "higher is better" },
-  { key: "interestMatchRate", hint: "higher is better" },
-  { key: "clickRate", hint: "higher is better" },
-  { key: "seenBeforeRate", hint: "repeat exposure" },
-  { key: "intrusiveRate", hint: "lower is better" },
+  { key: "highRelevanceShare", arrow: "↑" }, // ↑ higher is better, ↓ lower is better (explained in the ⓘ)
+  { key: "interestMatchRate", arrow: "↑" },
+  { key: "clickRate", arrow: "↑" },
+  { key: "seenBeforeRate", arrow: "" },
+  { key: "intrusiveRate", arrow: "↓" },
 ];
 
 const TOP = 34;     // room for the platform headers
@@ -28,24 +28,19 @@ export function createButterfly(container) {
   const root = d3.select(container);
   const plot = root.append("div").attr("class", "chart-plot");
   const svg = plot.append("svg").attr("role", "group").attr("aria-label", "Instagram versus YouTube on five measures");
-  const note = root.append("p").attr("class", "chart-note");
+  let previous = new Map(); // "metric|platform" → last value, so bars grow from where they were
 
   return {
-    update({ ads, state }) {
+    update({ ads, state, animate }) {
       const base = filterAds(ads, state, { ignore: ["platforms"] });
       const faded = (p) => !state.platforms.includes(p);
-      const fadedNames = PLATFORMS.filter(faded);
-      // Note first (it shares the panel with the plot), then measure the plot.
-      note.text(fadedNames.length ? `${fadedNames.join(" and ")} is filtered out elsewhere, so it is faded here for comparison.` : "");
-
       const width = plot.node().clientWidth;
       const narrow = width < 440;
-      const labelW = Math.round(Math.min(170, Math.max(narrow ? 128 : 140, width * 0.32)));
+      const labelW = Math.round(Math.min(170, Math.max(narrow ? 146 : 150, width * 0.32)));
       const side = Math.max(40, (width - labelW) / 2 - VALUE_W);
       // Rows share whatever height the panel gives the plot.
-      const ROW_H = Math.max(20, Math.min(60, (plot.node().clientHeight - TOP - BOTTOM) / ROWS.length));
-      const BAR_H = Math.min(16, Math.round(ROW_H * 0.42));
-      const showHints = ROW_H >= 30;
+      const ROW_H = Math.max(18, Math.min(96, (plot.node().clientHeight - TOP - BOTTOM) / ROWS.length));
+      const BAR_H = Math.min(26, Math.round(ROW_H * 0.42));
       const height = TOP + ROWS.length * ROW_H + BOTTOM;
 
       // x positions: left bars end at leftEdge, right bars start at rightEdge.
@@ -105,10 +100,9 @@ export function createButterfly(container) {
       const label = svg.append("g").selectAll("g").data(ROWS).join("g")
         .attr("transform", (d, i) => `translate(${leftEdge + labelW / 2},${TOP + i * ROW_H + ROW_H / 2})`)
         .attr("text-anchor", "middle");
-      label.append("text").attr("y", showHints ? -2 : 4).style("fill", "var(--text-primary)").style("font-size", narrow ? "12px" : "13px")
-        .text((d) => METRICS[d.key].label);
-      label.append("text").attr("y", 13).style("fill", "var(--text-muted)").style("font-size", "11px")
-        .text((d) => (showHints ? d.hint : ""));
+      label.append("text").attr("y", 4).style("fill", "var(--text-primary)").style("font-size", narrow ? "11.5px" : "13px")
+        .text((d) => METRICS[d.key].label)
+        .append("tspan").attr("dx", 5).style("fill", "var(--text-muted)").text((d) => d.arrow);
 
       // Bars, value labels and a full-width hover target per side.
       const cell = svg.append("g").selectAll("g").data(data).join("g")
@@ -116,27 +110,44 @@ export function createButterfly(container) {
         .attr("transform", (d) => `translate(0,${TOP + d.i * ROW_H})`)
         .style("opacity", (d) => (faded(d.platform) ? FADED : 1));
 
+      // On a filter change, bars and labels start at their previous value and glide to the new one.
       const barY = (ROW_H - BAR_H) / 2;
-      cell.append("path")
-        .attr("d", (d) => {
-          if (!Number.isFinite(d.value) || d.value === 0) return null;
-          const w = x(d.value);
-          return d.platform === "Instagram"
-            ? bar(leftEdge - w, barY, w, BAR_H, "left")
-            : bar(rightEdge, barY, w, BAR_H, "right");
-        })
-        .style("fill", (d) => platformColor(d.platform));
+      const keyOf = (d) => `${d.key}|${d.platform}`;
+      const from = (d) => (animate && Number.isFinite(previous.get(keyOf(d))) ? previous.get(keyOf(d)) : d.value);
+      const barPath = (d, v) => {
+        const w = Number.isFinite(v) ? Math.max(0.01, x(v)) : 0.01;
+        return d.platform === "Instagram"
+          ? bar(leftEdge - w, barY, w, BAR_H, "left")
+          : bar(rightEdge, barY, w, BAR_H, "right");
+      };
+      const labelX = (d, v) => {
+        const w = Number.isFinite(v) ? x(v) : 0;
+        return d.platform === "Instagram" ? leftEdge - w - 6 : rightEdge + w + 6;
+      };
+      const t = svg.transition().duration(animate ? 650 : 0).ease(d3.easeCubicInOut);
 
-      cell.append("text")
-        .attr("x", (d) => {
-          const w = Number.isFinite(d.value) ? x(d.value) : 0;
-          return d.platform === "Instagram" ? leftEdge - w - 6 : rightEdge + w + 6;
-        })
+      const bars = cell.append("path")
+        .attr("d", (d) => barPath(d, from(d)))
+        .style("fill", (d) => platformColor(d.platform))
+        .style("opacity", (d) => (Number.isFinite(d.value) && d.value > 0 ? 1 : 0));
+      const values = cell.append("text")
+        .attr("x", (d) => labelX(d, from(d)))
         .attr("y", ROW_H / 2 + 4)
         .attr("text-anchor", (d) => (d.platform === "Instagram" ? "end" : "start"))
         .style("font-variant-numeric", "tabular-nums")
         .style("fill", "var(--text-secondary)")
-        .text((d) => (Number.isFinite(d.value) ? METRICS[d.key].format(d.value) : "no ads"));
+        .text((d) => (Number.isFinite(d.value) ? METRICS[d.key].format(from(d)) : "no ads"));
+      if (animate) {
+        bars.transition(t).attr("d", (d) => barPath(d, d.value));
+        values.transition(t)
+          .attr("x", (d) => labelX(d, d.value))
+          .textTween((d) => {
+            if (!Number.isFinite(d.value)) return () => "no ads";
+            const i = d3.interpolateNumber(from(d), d.value);
+            return (tt) => METRICS[d.key].format(i(tt));
+          });
+      }
+      previous = new Map(data.map((d) => [keyOf(d), d.value]));
 
       cell.append("rect")
         .attr("x", (d) => (d.platform === "Instagram" ? 0 : rightEdge))
