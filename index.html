@@ -9,20 +9,19 @@
 </head>
 <body>
   <header class="site-header">
-    <div>
+    <div class="site-title">
       <p class="eyebrow">CPSC 482 · Group 10</p>
       <h1>Beyond the Algorithm</h1>
       <p class="lede">
-        Five of us logged every Instagram and YouTube ad we saw from October 10 to November 2, 2026:
-        what it was, how relevant it felt, what we did with it, and whether it felt too personal.
+        Five of us logged every Instagram and YouTube ad we saw, October 10 – November 2, 2026.
+        Self-reported; it describes our sample, not what data either platform used.
       </p>
     </div>
-    <button id="theme-toggle" class="btn" type="button" aria-label="Toggle dark mode">Dark mode</button>
+    <section id="cards" class="cards" aria-label="Summary"></section>
+    <button id="theme-toggle" class="btn theme-toggle" type="button" aria-label="Toggle dark mode">Dark mode</button>
   </header>
 
   <nav id="filters" class="filter-bar" aria-label="Dashboard filters"></nav>
-
-  <section id="cards" class="cards" aria-label="Summary"></section>
 
   <main class="grid">
     <section class="panel span-2" id="panel-treemap">
@@ -65,13 +64,6 @@
       <div class="chart" id="chart-reason"></div>
     </section>
   </main>
-
-  <footer class="site-footer">
-    <p>
-      Self-reported observations from five participants (P1–P5); results describe this sample only and
-      make no claim about what data either platform used to target an ad.
-    </p>
-  </footer>
 
   <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
 

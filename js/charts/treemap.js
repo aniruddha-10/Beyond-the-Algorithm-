@@ -41,16 +41,14 @@ export function createTreemap(container, { brands }) {
     if (last) draw(last);
   });
 
-  const svg = root.append("svg").attr("role", "group").attr("aria-label", "Treemap of ad categories");
-  const legend = root.append("div").attr("class", "legend");
+  const legend = controls.append("div").attr("class", "legend");
+  const plot = root.append("div").attr("class", "chart-plot");
+  const svg = plot.append("svg").attr("role", "group").attr("aria-label", "Treemap of ad categories");
   const note = root.append("p").attr("class", "chart-note");
 
   function draw({ ads, state }) {
     // Keep every category visible while one is selected.
     const base = filterAds(ads, state, { ignore: ["category"] });
-    const width = container.clientWidth;
-    const height = Math.round(Math.max(280, Math.min(400, width * 0.4)));
-
     const groups = d3.rollups(base, (v) => v, (d) => d.category)
       .map(([category, rows]) => ({
         category,
@@ -73,6 +71,26 @@ export function createTreemap(container, { brands }) {
       const rows = folded.flatMap((g) => g.rows);
       items.push({ category: OTHER, rows, n: rows.length, folded, relevance: NaN });
     }
+
+    // Legend and note first: they share the panel with the plot, so measure the plot after.
+    const stops = d3.range(1, 5.01, 0.5).map((v, i, a) => `${relevanceColor(v)} ${(i / (a.length - 1)) * 100}%`);
+    legend.html(`
+      <span>Area = number of ads</span>
+      <span class="legend-item">Average relevance
+        <span class="legend-ramp-wrap"><span class="legend-ramp" style="background: linear-gradient(to right, ${stops.join(", ")})"></span>
+        <span class="legend-ramp-labels"><span>1 · not relevant</span><span>5 · specific need</span></span></span>
+      </span>
+    `);
+
+    const shownAds = d3.sum(shown, (g) => g.n);
+    note.text(
+      state.category
+        ? `Filtered to ${state.category}. Click it again (or Reset) to show all categories.`
+        : `Click a category to filter the whole dashboard. ${folded.length ? `The ${shown.length} largest categories hold ${shownAds} of ${base.length} ads.` : ""}`
+    );
+
+    const width = plot.node().clientWidth;
+    const height = Math.max(120, plot.node().clientHeight);
 
     svg.attr("width", width).attr("height", height).attr("viewBox", [0, 0, width, height]);
 
@@ -150,23 +168,6 @@ export function createTreemap(container, { brands }) {
         }
       });
 
-    // Legend: colour ramp + what grey means.
-    const stops = d3.range(1, 5.01, 0.5).map((v, i, a) => `${relevanceColor(v)} ${(i / (a.length - 1)) * 100}%`);
-    legend.html(`
-      <span>Area = number of ads</span>
-      <span class="legend-item">Average relevance
-        <span class="legend-ramp-wrap"><span class="legend-ramp" style="background: linear-gradient(to right, ${stops.join(", ")})"></span>
-        <span class="legend-ramp-labels"><span>1 · not relevant</span><span>5 · specific need</span></span></span>
-      </span>
-      ${folded.length ? `<span class="legend-item"><span class="legend-swatch" style="background: var(--neutral)"></span>Smaller categories combined</span>` : ""}
-    `);
-
-    const shownAds = d3.sum(shown, (g) => g.n);
-    note.text(
-      state.category
-        ? `Filtered to ${state.category}. Click it again (or Reset) to show all categories.`
-        : `Click a category to filter the whole dashboard. ${folded.length ? `The ${shown.length} largest categories hold ${shownAds} of ${total} ads.` : ""}`
-    );
   }
 
   function activate(d, state, categoryCount) {

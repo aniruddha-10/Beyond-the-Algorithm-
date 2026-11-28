@@ -14,9 +14,8 @@ import { showTooltip, hideTooltip } from "../tooltip.js";
 const METRIC_KEYS = ["avgRelevance", "highRelevanceShare", "clickRate", "intrusiveRate"];
 const SHORT = { Instagram: "IG", YouTube: "YT" };
 const FEW_ADS = 5;  // fewer ads than this → hollow marker
-const ROW_H = 44;
-const TOP = 8;
-const BOTTOM = 26;
+const TOP = 18;     // room for the "Gap" column header
+const BOTTOM = 22;
 const FADED = 0.3;
 
 export function createDumbbell(container) {
@@ -26,31 +25,32 @@ export function createDumbbell(container) {
   let last = null;
 
   const controls = root.append("div").attr("class", "chart-controls");
-  const metricLabel = controls.append("label");
-  metricLabel.append("span").text("Measure ");
-  metricLabel.append("select")
+  controls.append("select").attr("aria-label", "Measure")
     .on("change", function () { metricKey = this.value; if (last) draw(last); })
     .selectAll("option").data(METRIC_KEYS).join("option")
     .attr("value", (d) => d).text((d) => METRICS[d].label);
-  const orderLabel = controls.append("label");
-  orderLabel.append("span").text("Order ");
-  orderLabel.append("select")
+  controls.append("select").attr("aria-label", "Row order")
     .on("change", function () { order = this.value; if (last) draw(last); })
     .selectAll("option").data([["participant", "P1 to P5"], ["gap", "Biggest gap first"]]).join("option")
     .attr("value", (d) => d[0]).text((d) => d[1]);
 
-  root.append("div").attr("class", "legend").html(`
-    <span class="legend-item"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" style="fill: var(--instagram)"/></svg>Instagram</span>
-    <span class="legend-item"><svg width="12" height="12" aria-hidden="true"><rect x="1" y="1" width="10" height="10" rx="1.5" style="fill: var(--youtube)"/></svg>YouTube</span>
-    <span class="legend-item"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill: none; stroke: var(--text-muted); stroke-width: 1.5"/></svg>Hollow = fewer than ${FEW_ADS} ads</span>
-  `);
-  const svg = root.append("svg").attr("role", "group");
-  const note = root.append("p").attr("class", "chart-note");
+  const legend = controls.append("div").attr("class", "legend");
+  const plot = root.append("div").attr("class", "chart-plot");
+  const svg = plot.append("svg").attr("role", "group");
 
   function draw({ ads, state }) {
     const metric = METRICS[metricKey];
     const base = filterAds(ads, state, { ignore: ["platforms"] });
-    const width = container.clientWidth;
+    const faded = (p) => !state.platforms.includes(p);
+
+    // Legend first (it shares the panel with the plot), then measure the plot.
+    const fadedNote = (p) => (faded(p) ? " (filtered out)" : "");
+    legend.html(`
+      <span class="legend-item${faded("Instagram") ? " is-faded" : ""}"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" style="fill: var(--instagram)"/></svg>Instagram${fadedNote("Instagram")}</span>
+      <span class="legend-item${faded("YouTube") ? " is-faded" : ""}"><svg width="12" height="12" aria-hidden="true"><rect x="1" y="1" width="10" height="10" rx="1.5" style="fill: var(--youtube)"/></svg>YouTube${fadedNote("YouTube")}</span>
+      <span class="legend-item"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill: none; stroke: var(--text-muted); stroke-width: 1.5"/></svg>Hollow: under ${FEW_ADS} ads</span>
+    `);
+    const width = plot.node().clientWidth;
     const left = 104;
     const right = Math.min(120, Math.max(84, width * 0.2));
 
@@ -73,6 +73,10 @@ export function createDumbbell(container) {
       data = [...data, all];
     }
 
+    // Rows share whatever height the panel gives the plot.
+    const ROW_H = Math.max(14, Math.min(48, (plot.node().clientHeight - TOP - BOTTOM) / Math.max(1, data.length)));
+    const roomy = ROW_H >= 32; // room for the "70 IG · 45 YT" line under each name
+    const r = ROW_H < 20 ? 4.5 : ROW_H < 26 ? 5.5 : 7;
     const height = TOP + Math.max(1, data.length) * ROW_H + BOTTOM;
     svg.attr("width", width).attr("height", height).attr("viewBox", [0, 0, width, height])
       .attr("aria-label", `${metric.label} on Instagram and YouTube for each participant`);
@@ -81,7 +85,6 @@ export function createDumbbell(container) {
     if (!data.length) {
       svg.append("text").attr("x", width / 2).attr("y", height / 2).attr("text-anchor", "middle")
         .text("No ads match the current filters.");
-      note.text("");
       return;
     }
 
@@ -89,7 +92,7 @@ export function createDumbbell(container) {
     const isRate = metric.domain[1] === 1;
     const maxValue = d3.max(data, (d) => Math.max(d.Instagram.value || 0, d.YouTube.value || 0));
     const domain = isRate ? [0, Math.min(1, Math.max(0.1, Math.ceil(maxValue * 10) / 10))] : metric.domain;
-    const x = d3.scaleLinear().domain(domain).range([left, width - right]);
+    const x = d3.scaleLinear().domain(domain).range([roomy ? left : 52, width - right]);
     const y = (i) => TOP + i * ROW_H + ROW_H / 2;
 
     // Grid + axis labels.
@@ -103,6 +106,11 @@ export function createDumbbell(container) {
       .style("font-size", "11px").style("fill", "var(--text-muted)")
       .text((v) => (isRate ? d3.format(".0%")(v) : v));
 
+    svg.append("text")
+      .attr("x", width - right + 14).attr("y", 11)
+      .style("font-size", "11px").style("fill", "var(--text-muted)")
+      .text(isRate ? "Gap (pts)" : "Gap");
+
     const row = svg.append("g").selectAll("g").data(data).join("g")
       .attr("transform", (d, i) => `translate(0,${y(i)})`);
 
@@ -112,12 +120,12 @@ export function createDumbbell(container) {
       .style("stroke", "var(--border)");
 
     // Row labels.
-    row.append("text").attr("y", -2)
+    row.append("text").attr("y", roomy ? -2 : 4)
       .style("fill", "var(--text-primary)").style("font-weight", 600).style("font-size", "13px")
       .text((d) => d.label);
     row.append("text").attr("y", 13)
       .style("fill", "var(--text-muted)").style("font-size", "11px")
-      .text((d) => (d.isAll
+      .text((d) => (!roomy ? "" : d.isAll
         ? (state.weighting === "balanced" ? "each person equally" : "every ad once")
         : `${d.Instagram.n} IG · ${d.YouTube.n} YT`));
 
@@ -127,7 +135,6 @@ export function createDumbbell(container) {
       .style("stroke", "var(--neutral)").style("stroke-width", 2);
 
     // Markers: YouTube square first so the Instagram circle sits on top when they overlap.
-    const faded = (p) => !state.platforms.includes(p);
     const marker = (sel, platform, draw) => sel
       .filter((d) => Number.isFinite(d[platform].value))
       .append(draw)
@@ -137,9 +144,9 @@ export function createDumbbell(container) {
       .style("stroke-width", 2);
     const isFew = (d, p) => !d.isAll && d[p].n < FEW_ADS;
     marker(row, "YouTube", "rect")
-      .attr("x", (d) => x(d.YouTube.value) - 6).attr("y", -6).attr("width", 12).attr("height", 12).attr("rx", 2);
+      .attr("x", (d) => x(d.YouTube.value) - (r - 1)).attr("y", -(r - 1)).attr("width", 2 * (r - 1)).attr("height", 2 * (r - 1)).attr("rx", 2);
     marker(row, "Instagram", "circle")
-      .attr("cx", (d) => x(d.Instagram.value)).attr("r", 7);
+      .attr("cx", (d) => x(d.Instagram.value)).attr("r", r);
 
     // Gap label on the right, in text colour (the marker beside it carries identity).
     row.append("text")
@@ -154,12 +161,6 @@ export function createDumbbell(container) {
       .style("fill", "transparent")
       .on("mousemove", (event, d) => showTooltip(event, tooltipFor(d, metric, state)))
       .on("mouseleave", hideTooltip);
-
-    const fadedNames = ["Instagram", "YouTube"].filter(faded);
-    note.text(
-      (isRate ? "Right column: difference in percentage points. " : "Right column: difference in average relevance. ") +
-      (fadedNames.length ? `${fadedNames.join(" and ")} is filtered out elsewhere, so it is faded here.` : "")
-    );
   }
 
   return {

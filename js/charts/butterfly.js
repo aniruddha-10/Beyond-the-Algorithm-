@@ -19,8 +19,6 @@ const ROWS = [
   { key: "intrusiveRate", hint: "lower is better" },
 ];
 
-const ROW_H = 46;
-const BAR_H = 16;
 const TOP = 34;     // room for the platform headers
 const BOTTOM = 26;  // room for the axis labels
 const VALUE_W = 44; // room for the value label past the end of a bar
@@ -28,16 +26,26 @@ const FADED = 0.3;
 
 export function createButterfly(container) {
   const root = d3.select(container);
-  const svg = root.append("svg").attr("role", "group").attr("aria-label", "Instagram versus YouTube on five measures");
+  const plot = root.append("div").attr("class", "chart-plot");
+  const svg = plot.append("svg").attr("role", "group").attr("aria-label", "Instagram versus YouTube on five measures");
   const note = root.append("p").attr("class", "chart-note");
 
   return {
     update({ ads, state }) {
       const base = filterAds(ads, state, { ignore: ["platforms"] });
-      const width = container.clientWidth;
+      const faded = (p) => !state.platforms.includes(p);
+      const fadedNames = PLATFORMS.filter(faded);
+      // Note first (it shares the panel with the plot), then measure the plot.
+      note.text(fadedNames.length ? `${fadedNames.join(" and ")} is filtered out elsewhere, so it is faded here for comparison.` : "");
+
+      const width = plot.node().clientWidth;
       const narrow = width < 440;
       const labelW = Math.round(Math.min(170, Math.max(narrow ? 128 : 140, width * 0.32)));
       const side = Math.max(40, (width - labelW) / 2 - VALUE_W);
+      // Rows share whatever height the panel gives the plot.
+      const ROW_H = Math.max(20, Math.min(60, (plot.node().clientHeight - TOP - BOTTOM) / ROWS.length));
+      const BAR_H = Math.min(16, Math.round(ROW_H * 0.42));
+      const showHints = ROW_H >= 30;
       const height = TOP + ROWS.length * ROW_H + BOTTOM;
 
       // x positions: left bars end at leftEdge, right bars start at rightEdge.
@@ -53,8 +61,6 @@ export function createButterfly(container) {
           return { ...row, i, platform, ...m, hits: Math.round(m.value * m.n) };
         })
       );
-      const faded = (p) => !state.platforms.includes(p);
-
       svg.attr("width", width).attr("height", height).attr("viewBox", [0, 0, width, height]);
       svg.selectAll("*").remove();
 
@@ -99,10 +105,10 @@ export function createButterfly(container) {
       const label = svg.append("g").selectAll("g").data(ROWS).join("g")
         .attr("transform", (d, i) => `translate(${leftEdge + labelW / 2},${TOP + i * ROW_H + ROW_H / 2})`)
         .attr("text-anchor", "middle");
-      label.append("text").attr("y", -2).style("fill", "var(--text-primary)").style("font-size", narrow ? "12px" : "13px")
+      label.append("text").attr("y", showHints ? -2 : 4).style("fill", "var(--text-primary)").style("font-size", narrow ? "12px" : "13px")
         .text((d) => METRICS[d.key].label);
       label.append("text").attr("y", 13).style("fill", "var(--text-muted)").style("font-size", "11px")
-        .text((d) => d.hint);
+        .text((d) => (showHints ? d.hint : ""));
 
       // Bars, value labels and a full-width hover target per side.
       const cell = svg.append("g").selectAll("g").data(data).join("g")
@@ -139,12 +145,6 @@ export function createButterfly(container) {
         .style("fill", "transparent")
         .on("mousemove", (event, d) => showTooltip(event, tooltipFor(d, state)))
         .on("mouseleave", hideTooltip);
-
-      const fadedNames = PLATFORMS.filter(faded);
-      note.text(
-        `Both sides use the same 0–100% scale.` +
-        (fadedNames.length ? ` ${fadedNames.join(" and ")} is filtered out elsewhere, so it is faded here for comparison.` : "")
-      );
     },
   };
 }

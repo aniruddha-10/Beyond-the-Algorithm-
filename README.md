@@ -20,7 +20,7 @@ Then open <http://localhost:8000>. (Opening `index.html` directly won't work, be
 ## Project layout
 
 ```
-index.html              page structure: header, filter bar, cards, five panels
+index.html              page structure: header (title + cards), filter bar, five panels
 css/style.css           shared colours (light + dark), layout, tooltip
 data/ads.json           cleaned ads, one record per ad (generated, committed)
 data/brands.json        brand counts by category + platform, never by person (generated, committed)
@@ -55,7 +55,11 @@ Every chart exports one function that `main.js` calls once:
 
 ```js
 export function createMyChart(container) {
-  // one-time setup: append the svg, controls (dropdowns, sliders) etc.
+  const root = d3.select(container);
+  // one-time setup, top to bottom: optional controls, the plot, optional note
+  const controls = root.append("div").attr("class", "chart-controls");
+  const plot = root.append("div").attr("class", "chart-plot");
+  const svg = plot.append("svg");
   return {
     update({ rows, ads, state }) {
       // runs on every filter change, theme toggle and window resize
@@ -68,7 +72,8 @@ export function createMyChart(container) {
 ```
 
 - **Import D3 from `../d3.js`**, not from the CDN, so the version stays pinned in one place.
-- **Size:** read `container.clientWidth` inside `update`, not once in setup.
+- **Size:** inside `update`, size the svg from `plot.node().clientWidth` and `plot.node().clientHeight`, not once in setup. On a laptop or desktop the whole dashboard fits one screen with no scrolling, so the plot gets whatever height is left in its panel after the controls and note. That can be as little as ~130px on a 1280×720 window, so let rows and bars shrink. On phones and short windows the page scrolls and the plot is a fixed 280px tall.
+- **Keep the extras short:** put legends in the `.chart-controls` row and keep notes to one line (`.chart-note` cuts off overflow). Every extra line takes height from your plot. Update controls, legend and note text *before* measuring the plot.
 - **Colours:** `platformColor(p)` and `relevanceColor(v)` from `theme.js`. Set them with `.style("fill", ...)`, not `.attr`, so the CSS variables (and dark mode) work. Don't introduce new colours without checking with the team.
 - **Metrics:** use `computeMetric(key, rows, state.weighting)` from `metrics.js` so "click rate" means the same thing everywhere and the "Each person equally" toggle works.
 - **Filtering the dashboard from your chart:** `setState({ category: "Finance" })` from `state.js`. Everything else re-renders automatically.
