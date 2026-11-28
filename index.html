@@ -4,69 +4,156 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Beyond the Algorithm</title>
-  <meta name="description" content="How personalized are the Instagram and YouTube ads we actually see? CPSC 482 Group 10.">
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="Five of us logged 356 Instagram and YouTube ads for 24 days and rated how personal each one felt. CPSC 482 Group 10.">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
-  <header class="site-header">
-    <div class="site-title">
-      <p class="eyebrow">CPSC 482 · Group 10</p>
-      <h1>Beyond the Algorithm</h1>
-      <p class="lede">
-        Five of us logged every Instagram and YouTube ad we saw, October 10 – November 2, 2026.
-        Self-reported; it describes our sample, not what data either platform used.
-      </p>
+<body class="page-landing">
+  <nav class="site-nav" aria-label="Site">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">Beyond the Algorithm</span></a>
+    <div class="nav-links">
+      <a href="index.html" aria-current="page">Intro</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="findings.html">Findings</a>
     </div>
-    <section id="cards" class="cards" aria-label="Summary"></section>
-    <button id="theme-toggle" class="btn theme-toggle" type="button" aria-label="Toggle dark mode">Dark mode</button>
-  </header>
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"></button>
+  </nav>
 
-  <nav id="filters" class="filter-bar" aria-label="Dashboard filters"></nav>
+  <main>
+    <header class="hero page">
+      <div class="glow" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div>
+        <p class="eyebrow reveal">CPSC 482 · Group 10 · Fall 2026</p>
+        <h1 class="hero-title reveal" style="--delay: 80ms">Beyond the <em class="gradient-text">Algorithm</em></h1>
+        <p class="hero-lede reveal" style="--delay: 160ms">
+          For 24 days, five of us logged every Instagram and YouTube ad we saw and rated how
+          personal each one felt. 356 ads later, here's how well the algorithms actually fit us.
+        </p>
+        <div class="hero-actions reveal" style="--delay: 240ms">
+          <a class="btn btn-lg btn-primary" href="dashboard.html">Explore the dashboard <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-lg btn-ghost" href="findings.html">What we found</a>
+        </div>
+        <div class="hero-stats reveal" style="--delay: 320ms">
+          <div><div class="stat-num" data-count="5">5</div><div class="stat-label">participants</div></div>
+          <div><div class="stat-num" data-count="24">24</div><div class="stat-label">days</div></div>
+          <div><div class="stat-num" data-count="356">356</div><div class="stat-label">ads logged</div></div>
+          <div><div class="stat-num" data-count="2">2</div><div class="stat-label">platforms</div></div>
+        </div>
+      </div>
+      <div class="phone reveal" style="--delay: 200ms" aria-label="A sample of the ads we logged, scrolling like a feed">
+        <div class="phone-screen"><div class="feed" id="feed"></div></div>
+      </div>
+    </header>
 
-  <main class="grid">
-    <section class="panel span-2" id="panel-treemap">
-      <header>
-        <p class="rq">RQ1 · Categories</p>
-        <h2>What kinds of ads do we actually see?</h2>
-      </header>
-      <div class="chart" id="chart-treemap"></div>
+    <div class="marquee" aria-label="Our most common ad categories">
+      <div class="marquee-track" id="marquee"></div>
+    </div>
+
+    <section class="section page" id="method">
+      <div class="section-head reveal">
+        <p class="kicker">The method</p>
+        <h2 class="section-title">We turned our own feeds into a dataset.</h2>
+      </div>
+      <div class="steps">
+        <article class="card-lift reveal">
+          <p class="step-num">01</p>
+          <h3>Scroll</h3>
+          <p>From October 10 to November 2, 2026, each of us noted the ads Instagram and YouTube showed us, wherever they appeared.</p>
+          <div class="tags"><span class="tag">Feed</span><span class="tag">Reels</span><span class="tag">Stories</span><span class="tag">Shorts</span><span class="tag">Pre-roll</span><span class="tag">Mid-roll</span></div>
+        </article>
+        <article class="card-lift reveal" style="--delay: 100ms">
+          <p class="step-num">02</p>
+          <h3>Log every ad</h3>
+          <p>For each one: what it was for, how relevant it felt from 1 to 5, why we think we saw it, what we did, and whether it felt too personal.</p>
+          <div class="tags"><span class="tag">category</span><span class="tag">relevance 1–5</span><span class="tag">reason</span><span class="tag">response</span><span class="tag">intrusive?</span></div>
+        </article>
+        <article class="card-lift reveal" style="--delay: 200ms">
+          <p class="step-num">03</p>
+          <h3>Compare</h3>
+          <p>We checked each ad against a list of interests each of us locked in, then compared categories, platforms and people.</p>
+          <div class="tags"><span class="tag">interest match</span><span class="tag">platform</span><span class="tag">P1–P5</span></div>
+        </article>
+      </div>
     </section>
 
-    <section class="panel" id="panel-butterfly">
-      <header>
-        <p class="rq">RQ1 · Platforms</p>
-        <h2>Which platform targets us better?</h2>
-      </header>
-      <div class="chart" id="chart-butterfly"></div>
+    <section class="section page" id="data" style="padding-top: 0">
+      <div class="section-head reveal">
+        <p class="kicker">The data</p>
+        <h2 class="section-title">Every dot is one ad.</h2>
+        <p class="section-lede">Switch the view to see the whole dataset rearrange itself. Hover a dot for the ad behind it.</p>
+      </div>
+      <div class="dots-wrap reveal">
+        <div class="dots-top">
+          <div class="mode-switch" id="dot-modes" role="group" aria-label="Arrange the dots by">
+            <button type="button" data-mode="platform" aria-pressed="true">Platform</button>
+            <button type="button" data-mode="relevance" aria-pressed="false">Relevance</button>
+            <button type="button" data-mode="intrusive" aria-pressed="false">Too personal</button>
+            <button type="button" data-mode="clicked" aria-pressed="false">Clicked</button>
+          </div>
+          <span class="autoplay" id="dots-autoplay">Playing · click a view to take over</span>
+        </div>
+        <p class="dots-caption" id="dots-caption" aria-live="polite"></p>
+        <div class="dots-legend" id="dots-legend"></div>
+        <div id="dots"></div>
+      </div>
     </section>
 
-    <section class="panel" id="panel-dumbbell">
-      <header>
-        <p class="rq">RQ4 · People</p>
-        <h2>Does Instagram beat YouTube for each of us?</h2>
-      </header>
-      <div class="chart" id="chart-dumbbell"></div>
+    <section class="section page" id="questions" style="padding-top: 0">
+      <div class="section-head reveal">
+        <p class="kicker">The questions</p>
+        <h2 class="section-title">Four questions drove the dashboard.</h2>
+      </div>
+      <div class="rq-grid">
+        <a class="card-lift rq-card reveal" href="dashboard.html#panel-treemap">
+          <p class="step-num">RQ1 · Categories &amp; platforms</p>
+          <h3>What kinds of ads do we see, and which platform targets us better?</h3>
+          <span class="go">Treemap and butterfly chart <span class="arrow" aria-hidden="true">→</span></span>
+        </a>
+        <a class="card-lift rq-card reveal" style="--delay: 80ms" href="dashboard.html#panel-likert">
+          <p class="step-num">RQ2 · Interests</p>
+          <h3>Does matching our interests make an ad feel relevant?</h3>
+          <span class="go">Diverging bars <span class="arrow" aria-hidden="true">→</span></span>
+        </a>
+        <a class="card-lift rq-card reveal" href="dashboard.html#panel-reason">
+          <p class="step-num">RQ3 · Intrusiveness</p>
+          <h3>When does a relevant ad start to feel too personal?</h3>
+          <span class="go">Reason × relevance matrix <span class="arrow" aria-hidden="true">→</span></span>
+        </a>
+        <a class="card-lift rq-card reveal" style="--delay: 80ms" href="dashboard.html#panel-dumbbell">
+          <p class="step-num">RQ4 · People</p>
+          <h3>Does Instagram beat YouTube for each of us?</h3>
+          <span class="go">Dumbbell chart <span class="arrow" aria-hidden="true">→</span></span>
+        </a>
+      </div>
     </section>
 
-    <section class="panel" id="panel-likert">
-      <header>
-        <p class="rq">RQ2 · Interests</p>
-        <h2>Does matching our interests make an ad feel relevant?</h2>
-      </header>
-      <div class="chart" id="chart-likert"></div>
-    </section>
-
-    <section class="panel" id="panel-reason">
-      <header>
-        <p class="rq">RQ3 · Intrusiveness</p>
-        <h2>When does a relevant ad start to feel too personal?</h2>
-      </header>
-      <div class="chart" id="chart-reason"></div>
+    <section class="page" style="padding-bottom: 0">
+      <div class="cta reveal">
+        <div class="glow" aria-hidden="true"><span></span><span></span></div>
+        <p class="kicker" style="color: inherit; opacity: .6">Your turn</p>
+        <h2 class="section-title">Filter it, slice it, find your own pattern.</h2>
+        <p>Every chart in the dashboard is linked. Pick a person, a platform or a category and watch the rest follow.</p>
+        <div class="hero-actions">
+          <a class="btn btn-lg btn-primary" href="dashboard.html">Open the dashboard <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-lg btn-ghost" href="findings.html">Read the findings</a>
+        </div>
+      </div>
     </section>
   </main>
 
+  <footer class="site-footer">
+    <div class="page footer-inner">
+      <p>CPSC 482 · Group 10. Self-reported observations from five participants (P1–P5); results describe this sample only and make no claim about what data either platform used to target an ad.</p>
+      <nav class="footer-links" aria-label="Footer"><a href="index.html">Intro</a><a href="dashboard.html">Dashboard</a><a href="findings.html">Findings</a></nav>
+    </div>
+  </footer>
+
   <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/site.js"></script>
+  <script type="module" src="js/landing.js"></script>
 </body>
 </html>

@@ -2,7 +2,6 @@
 // re-render everything whenever the filters, theme or window size change.
 import * as d3 from "./d3.js";
 import { getState, onChange, filterAds } from "./state.js";
-import { isDark } from "./theme.js";
 import { createFilters } from "./filters.js";
 import { createCards } from "./cards.js";
 import { createTreemap } from "./charts/treemap.js";
@@ -33,8 +32,7 @@ function render() {
 
 onChange(render);
 window.addEventListener("resize", debounce(render, 150));
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
-setupThemeToggle(render);
+window.addEventListener("themechange", render); // fired by site.js (toggle or OS change)
 render();
 
 function debounce(fn, ms) {
@@ -42,21 +40,3 @@ function debounce(fn, ms) {
   return () => { clearTimeout(t); t = setTimeout(fn, ms); };
 }
 
-function setupThemeToggle(onToggle) {
-  const button = document.getElementById("theme-toggle");
-  const root = document.documentElement;
-  try {
-    const saved = localStorage.getItem("theme");
-    if (saved === "light" || saved === "dark") root.dataset.theme = saved;
-  } catch { /* storage unavailable: follow the OS setting */ }
-
-  const label = () => { button.textContent = isDark() ? "Light mode" : "Dark mode"; };
-  label();
-
-  button.addEventListener("click", () => {
-    root.dataset.theme = isDark() ? "light" : "dark";
-    try { localStorage.setItem("theme", root.dataset.theme); } catch { /* ignore */ }
-    label();
-    onToggle();
-  });
-}

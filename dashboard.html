@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · Beyond the Algorithm</title>
+  <meta name="description" content="Interactive dashboard: how personalized are the Instagram and YouTube ads we actually see? CPSC 482 Group 10.">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-dashboard">
+  <nav class="site-nav" aria-label="Site">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">Beyond the Algorithm</span></a>
+    <div class="nav-links">
+      <a href="index.html">Intro</a>
+      <a href="dashboard.html" aria-current="page">Dashboard</a>
+      <a href="findings.html">Findings</a>
+    </div>
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"></button>
+  </nav>
+
+  <div class="dash">
+  <header class="site-header">
+    <div class="site-title">
+      <p class="eyebrow">Interactive dashboard · 356 ads · Oct 10 – Nov 2, 2026</p>
+      <h1>How personal are <em>our</em> ads?</h1>
+      <p class="lede">Every chart is linked: filter by person, platform, category or date, or click a category tile.</p>
+    </div>
+    <section id="cards" class="cards" aria-label="Summary"></section>
+  </header>
+
+  <nav id="filters" class="filter-bar" aria-label="Dashboard filters"></nav>
+
+  <main class="grid">
+    <section class="panel span-2" id="panel-treemap">
+      <header>
+        <p class="rq">RQ1 · Categories</p>
+        <h2>What kinds of ads do we actually see?</h2>
+      </header>
+      <div class="chart" id="chart-treemap"></div>
+    </section>
+
+    <section class="panel" id="panel-butterfly">
+      <header>
+        <p class="rq">RQ1 · Platforms</p>
+        <h2>Which platform targets us better?</h2>
+      </header>
+      <div class="chart" id="chart-butterfly"></div>
+    </section>
+
+    <section class="panel" id="panel-dumbbell">
+      <header>
+        <p class="rq">RQ4 · People</p>
+        <h2>Does Instagram beat YouTube for each of us?</h2>
+      </header>
+      <div class="chart" id="chart-dumbbell"></div>
+    </section>
+
+    <section class="panel" id="panel-likert">
+      <header>
+        <p class="rq">RQ2 · Interests</p>
+        <h2>Does matching our interests make an ad feel relevant?</h2>
+      </header>
+      <div class="chart" id="chart-likert"></div>
+    </section>
+
+    <section class="panel" id="panel-reason">
+      <header>
+        <p class="rq">RQ3 · Intrusiveness</p>
+        <h2>When does a relevant ad start to feel too personal?</h2>
+      </header>
+      <div class="chart" id="chart-reason"></div>
+    </section>
+  </main>
+  </div>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+
+  <script type="module" src="js/site.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

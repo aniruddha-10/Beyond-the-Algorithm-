@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Findings · Beyond the Algorithm</title>
+  <meta name="description" content="What stood out in 356 Instagram and YouTube ads, and what we learned collecting the data ourselves. CPSC 482 Group 10.">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body class="page-findings">
+  <nav class="site-nav" aria-label="Site">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">Beyond the Algorithm</span></a>
+    <div class="nav-links">
+      <a href="index.html">Intro</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="findings.html" aria-current="page">Findings</a>
+    </div>
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"></button>
+  </nav>
+
+  <main>
+    <header class="page-hero page">
+      <div class="glow" aria-hidden="true"><span></span><span></span></div>
+      <p class="eyebrow reveal">Findings</p>
+      <h1 class="hero-title reveal" style="--delay: 80ms">What we figured out <em class="gradient-text">along the way</em></h1>
+      <p class="hero-lede reveal" style="--delay: 160ms">
+        Four patterns that stood out in our 356 ads, a few smaller surprises, and what we learned
+        from collecting the data ourselves.
+      </p>
+    </header>
+
+    <div class="page">
+      <section class="finding">
+        <div class="finding-text reveal">
+          <p class="finding-num">01 · Relevance vs. intrusiveness</p>
+          <h2>The better an ad fit, the more it felt too personal.</h2>
+          <p>Not one of the <strong>123 ads</strong> we rated 1 felt intrusive. <strong>Two-thirds</strong> of the ads we rated 5 did.</p>
+          <p>Those same top-rated ads were also the ones we acted on: we clicked <strong>46%</strong> of them, against 8% of ads overall.</p>
+          <p class="takeaway">Relevance cuts both ways: the ads that work best sit closest to the line.</p>
+        </div>
+        <figure class="finding-chart reveal" style="--delay: 120ms; margin: 0">
+          <div id="chart-relevance-split"></div>
+          <figcaption class="chart-cap">Share of ads at each relevance rating (1 = not relevant, 5 = a specific need). Bar labels show the count behind each share.</figcaption>
+        </figure>
+      </section>
+
+      <section class="finding">
+        <div class="finding-text reveal">
+          <p class="finding-num">02 · Targeting</p>
+          <h2>Almost half our ads had nothing to do with us.</h2>
+          <p>For <strong>173 of 356 ads (49%)</strong>, the person who saw it couldn't name any reason they'd been shown it. Those ads averaged <strong>1.5 out of 5</strong> for relevance.</p>
+          <p>For all the talk of algorithms that know everything, a big share of what reached us looked untargeted.</p>
+        </div>
+        <figure class="finding-chart reveal" style="--delay: 120ms; margin: 0">
+          <div id="chart-no-connection"></div>
+          <figcaption class="chart-cap">Each square is one ad. Dark squares: “no obvious connection” was the reason given.</figcaption>
+        </figure>
+      </section>
+
+      <section class="finding">
+        <div class="finding-text reveal">
+          <p class="finding-num">03 · Why we thought we saw it</p>
+          <h2>How they seemed to know mattered more than what they knew.</h2>
+          <p>Ads we linked to a product we already use rated <strong>3.6</strong> for relevance, yet only <strong>1 of 38</strong> felt intrusive.</p>
+          <p>Ads that appeared right after we talked or messaged about something rated <strong>4.0</strong>, and <strong>6 of 7</strong> felt too personal. That group is small, so treat it as a hint rather than proof.</p>
+          <p class="takeaway">Being recognised as a customer felt fine. Feeling overheard did not.</p>
+        </div>
+        <figure class="finding-chart reveal" style="--delay: 120ms; margin: 0">
+          <div id="chart-reasons"></div>
+          <figcaption class="chart-cap">Share of ads that felt too personal, by the reason we gave. Reasons with at least 7 ads; faded bars have fewer than 15.</figcaption>
+        </figure>
+      </section>
+
+      <section class="finding">
+        <div class="finding-text reveal">
+          <p class="finding-num">04 · Platforms</p>
+          <h2>Same aim, very different reactions.</h2>
+          <p>On both platforms, exactly <strong>53.4%</strong> of ads matched one of our listed interests. Instagram and YouTube were equally on target.</p>
+          <p>Yet we clicked <strong>11.1%</strong> of Instagram ads and only <strong>3.4%</strong> of YouTube ads, more than three times the rate.</p>
+        </div>
+        <figure class="finding-chart reveal" style="--delay: 120ms; margin: 0">
+          <div id="chart-platforms"></div>
+          <figcaption class="chart-cap">All 356 ads, every ad counted once. Counting each person equally gives the same picture: clicks 12.2% vs 4.3%, interest match 49.9% vs 52.3%.</figcaption>
+        </figure>
+      </section>
+    </div>
+
+    <section class="section page">
+      <div class="section-head reveal">
+        <p class="kicker">Odds and ends</p>
+        <h2 class="section-title">Smaller things that stood out.</h2>
+      </div>
+      <div class="facts">
+        <article class="card-lift fact reveal">
+          <p class="step-num">Finance</p>
+          <div class="fact-num"><span data-count="0">0</span> clicks</div>
+          <p>on 59 finance ads, our single most common category.</p>
+        </article>
+        <article class="card-lift fact reveal" style="--delay: 80ms">
+          <p class="step-num">Gambling &amp; betting</p>
+          <div class="fact-num"><span data-count="20">20</span> ads</div>
+          <p>and not one matched anyone's listed interests. Average relevance: 1.5.</p>
+        </article>
+        <article class="card-lift fact reveal" style="--delay: 160ms">
+          <p class="step-num">Apps &amp; software</p>
+          <div class="fact-num"><span data-count="3.9" data-decimals="1">3.9</span> / 5</div>
+          <p>the highest average relevance of any large category, even though none of those ads matched our listed interests.</p>
+        </article>
+        <article class="card-lift fact reveal" style="--delay: 240ms">
+          <p class="step-num">Late nights</p>
+          <div class="fact-num">1 in 3</div>
+          <p>ads were logged between 11 pm and 1 am. That's when we were scrolling.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section page" style="padding-top: 0">
+      <div class="section-head reveal">
+        <p class="kicker">Lessons from the process</p>
+        <h2 class="section-title">Collecting it ourselves taught us a few things too.</h2>
+      </div>
+      <div class="lessons">
+        <article class="card-lift reveal">
+          <p class="step-num">01</p>
+          <h3>Brand names are messy.</h3>
+          <p>Our log had <strong>263</strong> different brand spellings. Once we fixed typos and variants (Grokbot → Grok, Bet366 → Bet365), they came down to <strong>211</strong> brands.</p>
+        </article>
+        <article class="card-lift reveal" style="--delay: 100ms">
+          <p class="step-num">02</p>
+          <h3>One person, a third of the data.</h3>
+          <p>P1 logged 115 of the 356 ads. Instead of throwing data away, we added a switch that counts each person equally. Most results barely moved: average relevance went from 2.53 to 2.47.</p>
+        </article>
+        <article class="card-lift reveal" style="--delay: 200ms">
+          <p class="step-num">03</p>
+          <h3>“Why did I see this?” is a guess.</h3>
+          <p>Platforms don't tell us what data they used, so every reason here is our own perception. These findings describe how targeting felt to five people over 24 days, not how it works.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="cta reveal">
+        <div class="glow" aria-hidden="true"><span></span><span></span></div>
+        <p class="kicker" style="color: inherit; opacity: .6">Explore</p>
+        <h2 class="section-title">Check our work, or find your own pattern.</h2>
+        <p>Everything on this page comes from the same 356 ads behind the dashboard.</p>
+        <div class="hero-actions">
+          <a class="btn btn-lg btn-primary" href="dashboard.html">Open the dashboard <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-lg btn-ghost" href="index.html">Back to the intro</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="page footer-inner">
+      <p>CPSC 482 · Group 10. Self-reported observations from five participants (P1–P5); results describe this sample only and make no claim about what data either platform used to target an ad.</p>
+      <nav class="footer-links" aria-label="Footer"><a href="index.html">Intro</a><a href="dashboard.html">Dashboard</a><a href="findings.html">Findings</a></nav>
+    </div>
+  </footer>
+
+  <script type="module" src="js/site.js"></script>
+  <script type="module" src="js/findings.js"></script>
+</body>
+</html>

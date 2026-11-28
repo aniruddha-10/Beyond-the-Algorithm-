@@ -3,7 +3,7 @@
 CPSC 482 Group 10 final dashboard: how personalized are the Instagram and YouTube ads we actually see?
 356 ads logged by five participants (P1–P5), October 10 – November 2, 2026.
 
-**Live site:** <https://aniruddha-10.github.io/Beyond-the-Algorithm-/>
+**Live site:** <https://aniruddha-10.github.io/Beyond-the-Algorithm-/> (intro) · [dashboard](https://aniruddha-10.github.io/Beyond-the-Algorithm-/dashboard.html) · [findings](https://aniruddha-10.github.io/Beyond-the-Algorithm-/findings.html)
 **Due:** December 1, noon (live link + PDF report)
 
 ## Run it locally
@@ -15,19 +15,25 @@ From the repo root:
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. (Opening `index.html` directly won't work, because browsers block module and JSON loading from `file://`.)
+Then open <http://localhost:8000> (intro) or <http://localhost:8000/dashboard.html>. (Opening `index.html` directly won't work, because browsers block module and JSON loading from `file://`.)
 
 ## Project layout
 
 ```
-index.html              page structure: header (title + cards), filter bar, five panels
-css/style.css           shared colours (light + dark), layout, tooltip
+index.html              intro / landing page (animated feed, "every dot is one ad", research questions)
+dashboard.html          the dashboard: header (title + cards), filter bar, five panels
+findings.html           conclusion: findings, smaller surprises, lessons from the process
+css/site.css            shared theme for all pages: colours (light + dark), fonts, nav, buttons, tooltip, story-page layout
+css/style.css           dashboard-only layout
 data/ads.json           cleaned ads, one record per ad (generated, committed)
 data/brands.json        brand counts by category + platform, never by person (generated, committed)
 data/raw/               original spreadsheet, NOT committed (gitignored)
 scripts/prepare_data.py spreadsheet → JSON
 scripts/brand_aliases.csv  brand spelling fixes, edit and re-run the script
-js/main.js              loads data, wires filters/cards/charts, theme toggle
+js/site.js              every page: theme toggle, nav, reveal-on-scroll, count-up numbers
+js/landing.js           intro page visuals
+js/findings.js          findings page charts
+js/main.js              dashboard: loads data, wires filters/cards/charts
 js/state.js             shared filter state + filterAds()
 js/metrics.js           metric definitions + pooled/balanced computation
 js/theme.js             platform colours, relevance colour ramp, fixed category orders
@@ -74,6 +80,7 @@ export function createMyChart(container) {
 - **Import D3 from `../d3.js`**, not from the CDN, so the version stays pinned in one place.
 - **Size:** inside `update`, size the svg from `plot.node().clientWidth` and `plot.node().clientHeight`, not once in setup. On a laptop or desktop the whole dashboard fits one screen with no scrolling, so the plot gets whatever height is left in its panel after the controls and note. That can be as little as ~130px on a 1280×720 window, so let rows and bars shrink. On phones and short windows the page scrolls and the plot is a fixed 280px tall.
 - **Keep the extras short:** put legends in the `.chart-controls` row and keep notes to one line (`.chart-note` cuts off overflow). Every extra line takes height from your plot. Update controls, legend and note text *before* measuring the plot.
+- **Fonts:** body text is Inter, headings Instrument Serif, small labels JetBrains Mono (`var(--font-sans)`, `--font-serif`, `--font-mono` in `site.css`). SVG text inherits Inter from `.chart text`.
 - **Colours:** `platformColor(p)` and `relevanceColor(v)` from `theme.js`. Set them with `.style("fill", ...)`, not `.attr`, so the CSS variables (and dark mode) work. Don't introduce new colours without checking with the team.
 - **Metrics:** use `computeMetric(key, rows, state.weighting)` from `metrics.js` so "click rate" means the same thing everywhere and the "Each person equally" toggle works.
 - **Filtering the dashboard from your chart:** `setState({ category: "Finance" })` from `state.js`. Everything else re-renders automatically.
@@ -131,4 +138,4 @@ Already enabled: Pages serves `main` / `/ (root)`. The site updates a minute or 
 
 ## GenAI note for the report
 
-The repo scaffold (data-prep script, filter bar, summary cards, shared state/metrics/theme modules, chart placeholders and this README) was generated with Claude Code. The treemap, butterfly and dumbbell charts were also generated with Claude Code. The remaining charts are built by their owners. List any other GenAI use in the Contributions section.
+The repo scaffold (data-prep script, filter bar, summary cards, shared state/metrics/theme modules, chart placeholders and this README) was generated with Claude Code, as were the intro and findings pages, the site theme and the one-screen dashboard layout. The treemap, butterfly and dumbbell charts were also generated with Claude Code. The remaining charts are built by their owners. List any other GenAI use in the Contributions section.
