@@ -22,7 +22,7 @@ Then open <http://localhost:8000> (intro) or <http://localhost:8000/dashboard.ht
 ```
 index.html              intro / landing page (animated feed, "every dot is one ad", research questions)
 dashboard.html          the dashboard: header (title + cards), filter bar, five panels
-findings.html           conclusion: findings, smaller surprises, lessons from the process
+findings.html           conclusion on one screen: the answer to "how personalized are our ads?", the personalization spectrum, the four dimensions (IG vs YT), three supporting facts
 css/site.css            shared theme for all pages: colours (light + dark), fonts, nav, buttons, tooltip, story-page layout
 css/style.css           dashboard-only layout
 data/ads.json           cleaned ads, one record per ad (generated, committed)
@@ -32,7 +32,7 @@ scripts/prepare_data.py spreadsheet → JSON
 scripts/brand_aliases.csv  brand spelling fixes, edit and re-run the script
 js/site.js              every page: theme toggle, nav, reveal-on-scroll, count-up numbers
 js/landing.js           intro page visuals
-js/findings.js          findings page charts
+js/findings.js          findings page: spectrum + four-dimension comparison, computed live from ads.json
 js/main.js              dashboard: loads data, wires filters/cards/charts
 js/state.js             shared filter state + filterAds()
 js/metrics.js           metric definitions + pooled/balanced computation

@@ -1,205 +1,266 @@
-// Findings page: four small, directly labelled charts computed from ads.json,
-// so they always agree with the dashboard. Bars grow in when scrolled into view.
+// Findings page: one answer to the proposal's question, "How personalized are
+// the ads we actually see?", drawn live from ads.json.
+//  - The personalization spectrum: every ad falls in exactly one band, using the
+//    proposal's relevance anchors and the felt-intrusive flag.
+//  - The proposal's four dimensions (targeting, relevance, engagement, privacy),
+//    Instagram vs YouTube.
+// Both follow the "every ad once / each person equally" switch.
 import * as d3 from "./d3.js";
+import { PARTICIPANTS, PLATFORMS } from "./state.js";
+import { computeMetric, METRICS } from "./metrics.js";
 import { platformColor, relevanceColor } from "./theme.js";
+import { showTooltip, hideTooltip } from "./tooltip.js";
 
 const ads = await d3.json("data/ads.json");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const pct = d3.format(".0%");
-const RATINGS = [1, 2, 3, 4, 5];
 
-const charts = [
-  mount("chart-relevance-split", drawRelevanceSplit),
-  mount("chart-no-connection", drawWaffle),
-  mount("chart-reasons", drawReasons),
-  mount("chart-platforms", drawPlatforms),
+// Each ad lands in one band. "Too personal" wins over the rating (only 7 intrusive
+// ads were rated 3 or lower).
+const BANDS = [
+  { key: "missed", label: "Missed us", sub: "rated 1–2", test: (d) => !d.intrusive && d.relevance <= 2, fill: () => relevanceColor(1.3) },
+  { key: "general", label: "General interest", sub: "rated 3", test: (d) => !d.intrusive && d.relevance === 3, fill: () => relevanceColor(3) },
+  { key: "useful", label: "Useful", sub: "rated 4–5", test: (d) => !d.intrusive && d.relevance >= 4, fill: () => relevanceColor(4.7) },
+  { key: "personal", label: "Too personal", sub: "felt intrusive", test: (d) => d.intrusive, fill: () => "var(--text-primary)" },
 ];
-window.addEventListener("themechange", () => charts.forEach((c) => c.redraw()));
-window.addEventListener("resize", debounce(() => charts.forEach((c) => c.redraw()), 150));
 
-/** Draw once off-screen-safe, then animate the first time the chart is seen. */
-function mount(id, draw) {
-  const el = document.getElementById(id);
-  let seen = false;
-  const render = (animate) => {
-    el.innerHTML = "";
-    draw(d3.select(el), el.clientWidth, animate && !reduceMotion, seen || reduceMotion);
-  };
-  render(false);
-  new IntersectionObserver((entries, io) => {
-    if (!entries[0].isIntersecting) return;
-    seen = true;
-    render(true);
-    io.disconnect();
-  }, { threshold: 0.3 }).observe(el);
-  return { redraw: () => render(false) };
-}
+const DIMENSIONS = [
+  { key: "interestMatchRate", name: "Targeting", measure: "matched one of our listed interests" },
+  { key: "avgRelevance", name: "Relevance", measure: "average rating, 1–5" },
+  { key: "clickRate", name: "Engagement", measure: "ads we clicked" },
+  { key: "intrusiveRate", name: "Privacy", measure: "felt too personal" },
+];
 
-// Grow helper: bars start at zero until the chart has been seen.
-function grow(sel, animate, delay = 0) {
-  return animate ? sel.transition().duration(900).delay((d, i) => delay + i * 70).ease(d3.easeCubicOut) : sel;
-}
+let weighting = "pooled";
+const spectrum = createSpectrum(document.getElementById("spectrum"), document.getElementById("spectrum-legend"));
+const dimensions = createDimensions(document.getElementById("dimensions"), document.getElementById("dims-summary"));
 
-// ---- 01: felt too personal / clicked, by relevance rating ----
-function drawRelevanceSplit(root, width, animate, shown) {
-  const rows = [
-    { key: "intrusive", title: "Felt too personal" },
-    { key: "clicked", title: "Clicked" },
-  ];
-  const byRating = RATINGS.map((r) => {
-    const group = ads.filter((d) => d.relevance === r);
-    return { r, n: group.length, intrusive: group.filter((d) => d.intrusive).length, clicked: group.filter((d) => d.clicked).length };
+const buttons = d3.selectAll("#weighting button").on("click", function () {
+  weighting = this.dataset.weighting;
+  buttons.attr("aria-pressed", function () { return String(this.dataset.weighting === weighting); });
+  spectrum.draw(true);
+  dimensions.draw();
+});
+window.addEventListener("themechange", () => { spectrum.draw(false); dimensions.draw(); });
+window.addEventListener("resize", debounce(() => spectrum.draw(false), 150));
+
+// ---------------------------------------------------------------------------
+/** Share of rows in each band. Balanced: average each person's shares. */
+function bandShares(rows, mode) {
+  const pooled = (r) => BANDS.map((b) => {
+    const hits = r.filter(b.test).length;
+    return { ...b, hits, share: r.length ? hits / r.length : 0 };
   });
-  const panelH = 150, barArea = 92, top = 46, gap = 18;
-  const height = rows.length * panelH + gap + 24;
-  const x = d3.scaleBand().domain(RATINGS).range([0, width]).paddingInner(0.28).paddingOuter(0.1);
-  const y = d3.scaleLinear().domain([0, 1]).range([0, barArea]);
-  const svg = root.append("svg").attr("width", width).attr("height", height)
-    .attr("role", "img").attr("aria-label", "Share of ads that felt too personal and that were clicked, at each relevance rating");
-
-  rows.forEach((row, ri) => {
-    const g = svg.append("g").attr("transform", `translate(0,${ri * (panelH + gap)})`);
-    g.append("text").attr("class", "chart-title").attr("y", 14).text(row.title);
-    const base = top + barArea;
-    g.append("line").attr("x1", 0).attr("x2", width).attr("y1", base).attr("y2", base).style("stroke", "var(--border)");
-    const cell = g.selectAll("g.cell").data(byRating).join("g").attr("transform", (d) => `translate(${x(d.r)},0)`);
-    const bar = cell.append("path").style("fill", (d) => relevanceColor(d.r))
-      .attr("d", (d) => topRounded(0, base, x.bandwidth(), shown && !animate ? y(d[row.key] / d.n) : 0));
-    grow(bar, animate, ri * 250).attr("d", (d) => topRounded(0, base, x.bandwidth(), y(d[row.key] / d.n)));
-    const label = cell.append("g").style("opacity", shown && !animate ? 1 : 0)
-      .attr("transform", (d) => `translate(${x.bandwidth() / 2},${base - y(d[row.key] / d.n) - 8})`)
-      .attr("text-anchor", "middle");
-    label.append("text").attr("class", "value").attr("y", -12).text((d) => pct(d[row.key] / d.n));
-    label.append("text").attr("y", 0).style("font-size", "10.5px").style("fill", "var(--text-muted)")
-      .text((d) => `${d[row.key]}/${d.n}`);
-    grow(label, animate, ri * 250 + 500).style("opacity", 1);
-  });
-  const axis = svg.append("g").attr("transform", `translate(0,${height - 6})`).attr("text-anchor", "middle");
-  axis.selectAll("text").data(RATINGS).join("text")
-    .attr("x", (r) => x(r) + x.bandwidth() / 2)
-    .text((r) => (r === 1 ? "1 · not relevant" : r === 5 ? "5 · specific need" : r));
-}
-
-// ---- 02: waffle of all ads, "no obvious connection" first ----
-function drawWaffle(root, width, animate, shown) {
-  const cols = 24;
-  const s = width / cols;
-  const sorted = [...ads].sort((a, b) => (b.reason === "No obvious connection") - (a.reason === "No obvious connection") || a.id - b.id);
-  const none = sorted.filter((d) => d.reason === "No obvious connection").length;
-  const rowsN = Math.ceil(sorted.length / cols);
-  const legendH = 34;
-  const svg = root.append("svg").attr("width", width).attr("height", rowsN * s + legendH)
-    .attr("role", "img").attr("aria-label", `${none} of ${ads.length} ads had no obvious connection to the person who saw them`);
-  const legend = svg.append("g").attr("transform", "translate(0,12)");
-  [[`${none} no obvious connection`, "var(--text-primary)"], [`${ads.length - none} had a reason we could name`, "var(--neutral)"]]
-    .forEach(([text, fill], i) => {
-      const g = legend.append("g").attr("transform", `translate(${i * Math.min(230, width / 2)},0)`);
-      g.append("rect").attr("width", 11).attr("height", 11).attr("y", -9).attr("rx", 2).style("fill", fill);
-      g.append("text").attr("x", 17).text(text).style("fill", "var(--text-primary)").style("font-size", "12.5px");
-    });
-  const cells = svg.append("g").attr("transform", `translate(0,${legendH})`)
-    .selectAll("rect").data(sorted).join("rect")
-    .attr("x", (d, i) => (i % cols) * s + 1).attr("y", (d, i) => Math.floor(i / cols) * s + 1)
-    .attr("width", Math.max(1, s - 2)).attr("height", Math.max(1, s - 2)).attr("rx", Math.min(3, s / 5))
-    .style("fill", (d) => (d.reason === "No obvious connection" ? "var(--text-primary)" : "var(--neutral)"))
-    .style("opacity", shown && !animate ? 1 : 0);
-  if (animate) cells.transition().duration(400).delay((d, i) => i * 3).style("opacity", 1);
-}
-
-// ---- 03: felt too personal, by reason given ----
-function drawReasons(root, width, animate, shown) {
-  const SHORT = {
-    "Right after I talked or messaged about it": "After talking or messaging about it",
-    "Right after I liked or followed similar content": "After liking or following similar posts",
-    "Shopping or previous purchase": "Shopping or a past purchase",
-    "Recent search or interest": "A recent search or interest",
-    "Product already used": "A product we already use",
-    "No obvious connection": "No obvious connection",
-    "Demographic connection": "Our age, gender or background",
-    "Location": "Where we were",
-  };
-  const data = d3.rollups(ads, (v) => ({ n: v.length, hits: v.filter((d) => d.intrusive).length }), (d) => d.reason)
-    .map(([reason, v]) => ({ reason, label: SHORT[reason] ?? reason, ...v, share: v.hits / v.n }))
-    .filter((d) => d.n >= 7)
-    .sort((a, b) => b.share - a.share || b.n - a.n);
-  // Wide: label column on the left. Narrow (phones): label above each bar.
-  const stacked = width < 480;
-  const rowH = stacked ? 46 : 34;
-  const labelW = stacked ? 0 : Math.min(250, width * 0.5);
-  const valueW = 64;
-  const barH = 12;
-  const barY = stacked ? 24 : rowH / 2 - barH / 2 + 2;
-  const x = d3.scaleLinear().domain([0, 1]).range([0, Math.max(40, width - labelW - valueW)]);
-  const svg = root.append("svg").attr("width", width).attr("height", data.length * rowH)
-    .attr("role", "img").attr("aria-label", "Share of ads that felt too personal, by the reason given");
-  const row = svg.selectAll("g").data(data).join("g").attr("transform", (d, i) => `translate(0,${i * rowH})`);
-  const label = row.append("text").attr("y", stacked ? 14 : rowH / 2 - 1).style("fill", "var(--text-primary)").style("font-size", "12.5px");
-  label.append("tspan").text((d) => d.label);
-  if (stacked) {
-    label.append("tspan").attr("dx", 8).style("font-size", "10.5px").style("fill", "var(--text-muted)").text((d) => `${d.hits} of ${d.n} ads`);
-  } else {
-    row.append("text").attr("y", rowH / 2 + 12).style("font-size", "10.5px").style("fill", "var(--text-muted)")
-      .text((d) => `${d.hits} of ${d.n} ads`);
-  }
-  const bar = row.append("path")
-    .style("fill", "var(--text-primary)")
-    .style("opacity", (d) => (d.n < 15 ? 0.4 : 0.9))
-    .attr("d", (d) => rightRounded(labelW, barY, shown && !animate ? x(d.share) : 0, barH));
-  grow(bar, animate).attr("d", (d) => rightRounded(labelW, barY, x(d.share), barH));
-  const value = row.append("text").attr("class", "value").attr("y", barY + barH - 2)
-    .attr("x", (d) => labelW + x(d.share) + 8).text((d) => pct(d.share))
-    .style("opacity", shown && !animate ? 1 : 0);
-  grow(value, animate, 450).style("opacity", 1);
-}
-
-// ---- 04: interest match vs click rate, by platform ----
-function drawPlatforms(root, width, animate, shown) {
-  const metrics = [
-    { title: "Matched one of our interests", test: (d) => d.interestMatch },
-    { title: "Clicked", test: (d) => d.clicked },
-  ];
-  const platforms = ["Instagram", "YouTube"];
-  const data = metrics.flatMap((m, mi) => platforms.map((p, pi) => {
-    const rows = ads.filter((d) => d.platform === p);
-    const hits = rows.filter(m.test).length;
-    return { ...m, mi, pi, platform: p, n: rows.length, hits, share: hits / rows.length };
+  if (mode !== "balanced") return { bands: pooled(rows), n: rows.length, people: null };
+  const per = PARTICIPANTS.map((p) => rows.filter((d) => d.participant === p)).filter((r) => r.length).map(pooled);
+  const bands = BANDS.map((b, i) => ({
+    ...b,
+    hits: d3.sum(per, (bs) => bs[i].hits),
+    share: d3.mean(per, (bs) => bs[i].share),
   }));
-  const labelW = 86, valueW = 92, barH = 22, groupH = 98;
-  const x = d3.scaleLinear().domain([0, 0.6]).range([0, Math.max(40, width - labelW - valueW)]);
-  const svg = root.append("svg").attr("width", width).attr("height", metrics.length * groupH + 30)
-    .attr("role", "img").attr("aria-label", "Interest match and click rate on Instagram and YouTube");
-  const legend = svg.append("g").attr("transform", "translate(0,10)");
-  platforms.forEach((p, i) => {
-    const g = legend.append("g").attr("transform", `translate(${i * 110},0)`);
-    g.append("rect").attr("width", 11).attr("height", 11).attr("y", -9).attr("rx", 3).style("fill", platformColor(p));
-    g.append("text").attr("x", 17).text(p).style("fill", "var(--text-primary)").style("font-size", "12.5px");
-  });
-  metrics.forEach((m, mi) => {
-    svg.append("text").attr("class", "chart-title").attr("y", 46 + mi * groupH).text(m.title);
-  });
-  const row = svg.selectAll("g.bar").data(data).join("g").attr("class", "bar")
-    .attr("transform", (d) => `translate(0,${58 + d.mi * groupH + d.pi * (barH + 6)})`);
-  row.append("text").attr("y", barH / 2 + 4).style("font-size", "12px").text((d) => d.platform);
-  const bar = row.append("path").style("fill", (d) => platformColor(d.platform))
-    .attr("d", (d) => rightRounded(labelW, 0, shown && !animate ? x(d.share) : 0, barH));
-  grow(bar, animate).attr("d", (d) => rightRounded(labelW, 0, x(d.share), barH));
-  const value = row.append("text").attr("class", "value").attr("y", barH / 2 + 4)
-    .attr("x", (d) => labelW + x(d.share) + 8)
-    .text((d) => `${d3.format(".1%")(d.share)}  (${d.hits}/${d.n})`)
-    .style("opacity", shown && !animate ? 1 : 0);
-  grow(value, animate, 450).style("opacity", 1);
+  return { bands, n: rows.length, people: per.length };
 }
 
-// ---- shapes: 4px rounded data end, square at the baseline ----
-function topRounded(x, base, w, h) {
-  h = Math.max(h, 0.01); // same path shape at zero, so the grow transition interpolates cleanly
-  const r = Math.min(4, w / 2, h);
-  return `M${x},${base}V${base - h + r}A${r},${r} 0 0 1 ${x + r},${base - h}H${x + w - r}A${r},${r} 0 0 1 ${x + w},${base - h + r}V${base}Z`;
+function createSpectrum(el, legendEl) {
+  const svg = d3.select(el).append("svg").attr("role", "img")
+    .attr("aria-label", "Share of ads in each personalization band, overall, by app and by person");
+  const previous = new Map(); // "row|band" → { x, w } so bars glide from where they were
+  let seen = false;
+
+  const rowsData = () => [
+    { id: "all", label: "All ads", main: true, ...bandShares(ads, weighting) },
+    ...PLATFORMS.map((p) => ({ id: p, label: p, main: true, ...bandShares(ads.filter((d) => d.platform === p), weighting) })),
+    ...PARTICIPANTS.map((p) => ({ id: p, label: p, main: false, ...bandShares(ads.filter((d) => d.participant === p), "pooled") })),
+  ];
+
+  function drawLegend() {
+    legendEl.innerHTML = BANDS.map((b) =>
+      `<span><i style="background:${b.fill()}"></i>${b.label} <small>${b.sub}</small></span>`).join("");
+  }
+
+  function draw(animate) {
+    drawLegend();
+    const width = el.clientWidth;
+    const height = Math.max(240, el.clientHeight);
+    const labelW = width < 480 ? 78 : 112;
+    const groupGap = 30; // room for the "By person" label
+    const rows = rowsData();
+    const unit = Math.max(20, Math.min(46, (height - groupGap) / (3 * 1.3 + 5)));
+    let y = 0;
+    rows.forEach((r, i) => {
+      if (i === 3) y += groupGap;
+      r.h = r.main ? unit * 1.3 : unit;
+      r.y = y;
+      y += r.h;
+    });
+    svg.attr("width", width).attr("height", y).attr("viewBox", [0, 0, width, y]);
+    svg.selectAll("*").remove();
+    const x = d3.scaleLinear().domain([0, 1]).range([labelW, width - 4]);
+    const go = animate && !reduceMotion;
+    const t = svg.transition().duration(go ? 750 : 0).ease(d3.easeCubicInOut);
+
+    svg.append("text").attr("x", 0).attr("y", rows[3].y - 10)
+      .style("font-family", "var(--font-mono)").style("font-size", "10.5px").style("letter-spacing", ".07em")
+      .style("fill", "var(--text-muted)").text("BY PERSON · BOTH APPS");
+
+    rows.forEach((r, ri) => {
+      const g = svg.append("g").attr("transform", `translate(0,${r.y})`);
+      const barH = Math.round(r.h * (r.main ? 0.64 : 0.56));
+      const barY = (r.h - barH) / 2;
+      g.append("text").attr("y", r.h / 2 + (r.main ? -1 : 4))
+        .style("fill", "var(--text-primary)").style("font-weight", r.main ? 600 : 500).style("font-size", r.main ? "13.5px" : "12.5px")
+        .text(r.label);
+      if (r.main) {
+        g.append("text").attr("y", r.h / 2 + 13).style("font-size", "10.5px").style("fill", "var(--text-muted)")
+          .text(weighting === "balanced" && r.people ? `${r.n} ads · ${r.people} people` : `${r.n} ads`);
+      }
+      const clipId = `spectrum-clip-${ri}`;
+      g.append("clipPath").attr("id", clipId).append("rect")
+        .attr("x", labelW).attr("y", barY).attr("width", x(1) - labelW).attr("height", barH).attr("rx", 5);
+      const bars = g.append("g").attr("clip-path", `url(#${clipId})`);
+
+      let acc = 0;
+      const segs = r.bands.map((b) => {
+        const seg = { ...b, x0: x(acc), w: Math.max(0, x(acc + b.share) - x(acc) - 2) };
+        acc += b.share;
+        return seg;
+      });
+      const key = (b) => `${r.id}|${b.key}`;
+      // Not yet seen: everything starts collapsed at the left edge, ready to grow in.
+      const from = (b) => {
+        if (!seen) return { x: labelW, w: 0 };
+        if (go) return previous.get(key(b)) ?? { x: labelW, w: 0 };
+        return { x: b.x0, w: b.w };
+      };
+
+      const seg = bars.selectAll("g").data(segs).join("g")
+        .on("mousemove", (event, b) => showTooltip(event, tooltipFor(r, b)))
+        .on("mouseleave", hideTooltip);
+      const rect = seg.append("rect").attr("y", barY).attr("height", barH)
+        .attr("x", (b) => from(b).x).attr("width", (b) => from(b).w)
+        .style("fill", (b) => b.fill());
+      const label = seg.append("text")
+        .attr("y", barY + barH / 2 + 4)
+        .attr("x", (b) => b.x0 + 7)
+        .style("font-family", "var(--font-mono)").style("font-size", r.main ? "11.5px" : "10.5px")
+        .style("fill", (b) => inkOn(b))
+        .style("opacity", seen && !go ? 1 : 0)
+        .text((b) => (b.w > (r.main ? 38 : 32) ? `${Math.round(b.share * 100)}%` : ""));
+      if (seen && go) {
+        rect.transition(t).attr("x", (b) => b.x0).attr("width", (b) => b.w);
+        label.transition(t).delay(250).style("opacity", 1);
+      }
+      if (seen) segs.forEach((b) => previous.set(key(b), { x: b.x0, w: b.w }));
+    });
+  }
+
+  // Bars grow in the first time the chart is seen.
+  if (reduceMotion) seen = true;
+  draw(false);
+  if (!reduceMotion) {
+    new IntersectionObserver((entries, io) => {
+      if (!entries[0].isIntersecting) return;
+      seen = true;
+      draw(true);
+      io.disconnect();
+    }, { threshold: 0.25 }).observe(el);
+  }
+
+  return { draw: (animate) => { if (seen) draw(animate); } };
 }
-function rightRounded(x, y, w, h) {
-  w = Math.max(w, 0.01);
-  const r = Math.min(4, w, h / 2);
-  return `M${x},${y}H${x + w - r}A${r},${r} 0 0 1 ${x + w},${y + r}V${y + h - r}A${r},${r} 0 0 1 ${x + w - r},${y + h}H${x}Z`;
+
+function inkOn(b) {
+  if (b.key === "personal") return "var(--surface-0)";
+  return d3.lab(b.fill()).l > 62 ? "#0b0b0b" : "#ffffff";
+}
+
+function tooltipFor(r, b) {
+  const pct = d3.format(".1%")(b.share);
+  const basis = !r.main || weighting === "pooled"
+    ? `${b.hits} of ${r.n} ads`
+    : `average of ${r.people} people; ${b.hits} of ${r.n} ads`;
+  return `<strong>${r.label} · ${b.label}</strong><br>${pct} <span class="muted">(${basis})</span><br><span class="muted">${b.sub}</span>`;
+}
+
+// ---------------------------------------------------------------------------
+function createDimensions(el, summaryEl) {
+  function draw() {
+    const rows = DIMENSIONS.map((dim) => {
+      const values = PLATFORMS.map((p) => ({ platform: p, ...computeMetric(dim.key, ads.filter((d) => d.platform === p), weighting) }));
+      return { ...dim, metric: METRICS[dim.key], values, verdict: verdictFor(dim.key, values) };
+    });
+
+    const leads = d3.rollups(rows.filter((r) => r.verdict.leader), (v) => v.length, (r) => r.verdict.leader)
+      .sort((a, b) => b[1] - a[1]);
+    const targetingEven = !rows.find((r) => r.key === "interestMatchRate").verdict.leader;
+    summaryEl.textContent = leads.length
+      ? `${leads[0][0]} was more personalized on ${leads[0][1]} of ${rows.length} dimensions` +
+        (targetingEven ? ", even though both apps matched our listed interests about equally often." : ".")
+      : "The two apps came out even.";
+
+    d3.select(el).selectAll(".dim").data(rows, (d) => d.key).join((enter) => {
+      const row = enter.append("div").attr("class", "dim");
+      const name = row.append("div").attr("class", "dim-name");
+      name.append("strong");
+      name.append("span");
+      const bars = row.append("div").attr("class", "dim-bars");
+      PLATFORMS.forEach((p) => {
+        const bar = bars.append("div").attr("class", "dim-bar").attr("data-platform", p).attr("tabindex", 0);
+        bar.append("span").attr("class", "dim-fill");
+        bar.append("span").attr("class", "dim-val");
+      });
+      row.append("div").attr("class", "dim-verdict");
+      return row;
+    })
+      .each(function (d) {
+        const row = d3.select(this);
+        row.select("strong").text(d.name);
+        row.select(".dim-name span").text(d.measure);
+        // Each row has its own scale: 1–5 for relevance, 0 to a rounded-up max for rates.
+        const isScore = d.key === "avgRelevance";
+        const max = isScore ? 5 : Math.max(0.2, Math.ceil(d3.max(d.values, (v) => v.value) * 1.25 * 10) / 10);
+        row.selectAll(".dim-bar").each(function () {
+          const v = d.values.find((x) => x.platform === this.dataset.platform);
+          const share = isScore ? (v.value - 1) / (max - 1) : v.value / max;
+          const bar = d3.select(this);
+          bar.select(".dim-fill").style("width", `${Math.max(0, share) * 100}%`).style("background", platformColor(v.platform));
+          bar.select(".dim-val").text(`${v.platform === "Instagram" ? "IG" : "YT"} ${d.metric.format(v.value)}`);
+          bar.attr("aria-label", `${v.platform}, ${d.name}: ${d.metric.format(v.value)}`)
+            .on("mousemove", (event) => showTooltip(event,
+              `<strong>${v.platform} · ${d.name}</strong><br>${d.metric.format(v.value)} ` +
+              `<span class="muted">(${weighting === "balanced" ? `average of ${v.people} people; ` : ""}${v.n} ads)</span>` +
+              `<br><span class="muted">${d.measure}</span>`))
+            .on("mouseleave", hideTooltip);
+        });
+        row.select(".dim-verdict").html(d.verdict.leader
+          ? `<i style="background:${platformColor(d.verdict.leader)}"></i>${d.verdict.text}`
+          : d.verdict.text);
+      });
+  }
+
+  // Bars sit at zero (CSS .is-waiting) until the card is seen, then grow via the CSS width transition.
+  draw();
+  if (!reduceMotion) {
+    el.classList.add("is-waiting");
+    new IntersectionObserver((entries, io) => {
+      if (!entries[0].isIntersecting) return;
+      requestAnimationFrame(() => el.classList.remove("is-waiting"));
+      io.disconnect();
+    }, { threshold: 0.25 }).observe(el);
+  }
+  return { draw };
+}
+
+/** "Even" within 3 points (or 0.15 on the 1–5 scale); otherwise the leader, with "3×" for big rate gaps. */
+function verdictFor(key, values) {
+  const [ig, yt] = values.map((v) => v.value);
+  const isScore = key === "avgRelevance";
+  const diff = ig - yt;
+  if (Math.abs(diff) < (isScore ? 0.15 : 0.03)) return { leader: null, text: "Even" };
+  const leader = diff > 0 ? "Instagram" : "YouTube";
+  const hi = Math.max(ig, yt);
+  const lo = Math.min(ig, yt);
+  const text = !isScore && lo > 0 && hi / lo >= 2 ? `${leader}, ${Math.round(hi / lo)}×` : leader;
+  return { leader, text };
 }
 
 function debounce(fn, ms) {
